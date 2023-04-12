@@ -8,3 +8,12 @@
     flex-direction: column;
     background-color: #F0F2F5;
 }
+/* Footer Logout */
+.sidebar-footer {
+    padding: 1.5em;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}

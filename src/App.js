@@ -1,6 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
-import { useState } from "react"
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useHistory } from 'react-router-dom';
 
 import SideBar from './components/Sidebar';
 import sidebar_menu from './constants/sidebar-menu';
@@ -10,30 +9,53 @@ import Orders from './pages/Orders';
 import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
 import sidebar_unauth from './constants/sidebar-unauth';
+import LogoutIcon from './assets/icons/logout.svg';
 
-function App () {
-  const [active, setActive] = useState(false);
-  if(localStorage.getItem("token") !== null)
-  {
-    setActive(true);
-  }
-  return(
+function App() {
+  const [sidebarActive, setSidebarActive] = useState(false);
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setSidebarActive(false);
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setSidebarActive(true);
+    } else {
+      setSidebarActive(false);
+    }
+  }, sidebarActive)
+
+  return (
     <Router>
-      <div className='dashboard-container'>
-          <SideBar menu={active ? sidebar_menu : sidebar_unauth}/>
-          <div className='dashboard-body'>
-              <Routes>
-                  <Route path="*" element={<div></div>} />
-                  <Route exact path="/" element={<div></div>} />
-                  <Route exact path="/orders" element={< Orders/>} />
-                  <Route exact path="/locations" element={<div></div>} />
-                  <Route exact path="/profile" element={<Profile/>} />
-                  <Route exact path="/login" element={<Login/>} />
-              </Routes>
-          </div>
+      <div className="dashboard-container">
+        <SideBar menu={sidebarActive ? sidebar_menu : sidebar_unauth} />
+        <div className="dashboard-body">
+          <Routes>
+            <Route path="*" element={<div></div>} />
+            <Route exact path="/" element={<div></div>} />
+            <Route exact path="/orders" element={<Orders />} />
+            <Route exact path="/locations" element={<div></div>} />
+            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/login" element={<Login />} />
+          </Routes>
+        </div>
+        <div className="sidebar-footer">
+          {sidebarActive && (
+            <span className="sidebar-item-label">
+              <Link to="/login" onClick={handleLogout} style={{color:"black", backgroundColor:"white"}}>Logout</Link>
+            </span>
+          )}
+          <Link to="/">
+            <img src={LogoutIcon} alt="icon-logout" className="sidebar-item-icon" />
+          </Link>
+        </div>
       </div>
     </Router>
-  )
+  );
 }
 
 export default App;

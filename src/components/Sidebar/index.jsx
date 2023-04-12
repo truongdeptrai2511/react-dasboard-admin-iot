@@ -4,11 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SideBarItem from './sidebar-item';
 
 import './styles.css';
-import LogoutIcon from '../../assets/icons/logout.svg';
 
 function SideBar ({ menu }) {
     const location = useLocation();
-    const UseNavigate = useNavigate();
     const [active, setActive] = useState(1);
 
     useEffect(() => {
@@ -22,13 +20,6 @@ function SideBar ({ menu }) {
     const __navigate = (id) => {
         setActive(id);
     }
-
-    const handleLogout = () => {
-        localStorage.clear();
-        UseNavigate('/');
-        console.log('logout');
-    }
-
     return(
         <nav className='sidebar'>
             <div className='sidebar-container'>
@@ -45,15 +36,6 @@ function SideBar ({ menu }) {
                                     item={item} />
                             </div>
                         ))}
-                    </div>
-
-                    <div className='sidebar-footer'>
-                        
-                        <span className='sidebar-item-label' ><a onClick={handleLogout}>Logout</a></span>
-                        <img 
-                            src={LogoutIcon}
-                            alt='icon-logout'
-                            className='sidebar-item-icon' />
                     </div>
                 </div>
             </div>

@@ -18,8 +18,7 @@ function Login(){
 			const url = "https://localhost:7199/api/auth/login";
 			const { data: res } = await axios.post(url, data);
 			localStorage.setItem("token", 'Bearer ' + res.Token);
-            alert("Login success");
-			UseNavigate("/profile");
+			UseNavigate("/");
 			console.log("Login success")
 		} catch (error) {
 			if (
@@ -30,6 +29,7 @@ function Login(){
 				alert(error.response.data.message);
 			}
 		}
+		window.location.reload();
 	};
     return(
         <div className="login_container">
