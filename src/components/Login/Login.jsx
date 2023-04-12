@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import axios from 'axios';
 import { useState } from "react";
 
 
+
 function Login(){
     const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState("");
+    const UseNavigate = useNavigate();
     const handleChange = ({ currentTarget: input }) => {
 		setData({ ...data, [input.name]: input.value });
 	};
@@ -15,8 +17,9 @@ function Login(){
 		try {
 			const url = "https://localhost:7199/api/auth/login";
 			const { data: res } = await axios.post(url, data);
-			localStorage.setItem("token", 'Bearer ' + res.data);
-			window.location = "/";
+			localStorage.setItem("token", 'Bearer ' + res.Token);
+            alert("Login success");
+			UseNavigate("/profile");
 			console.log("Login success")
 		} catch (error) {
 			if (
@@ -24,7 +27,7 @@ function Login(){
 				error.response.status >= 400 &&
 				error.response.status <= 500
 			) {
-				setError(error.response.data.message);
+				alert(error.response.data.message);
 			}
 		}
 	};
