@@ -27,6 +27,12 @@ const sidebar_menu = [
         icon: UserIcon,
         path: '/profile',
         title: 'My account',
+    },
+    {
+        id: 5,
+        icon: UserIcon,
+        path: '/login',
+        title: 'Login',
     }
 ]
 

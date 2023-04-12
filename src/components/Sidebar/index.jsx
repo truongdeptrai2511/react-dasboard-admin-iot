@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import SideBarItem from './sidebar-item';
 
 import './styles.css';
-import logo from '../../assets/images/white-logo.png';
 import LogoutIcon from '../../assets/icons/logout.svg';
 
 function SideBar ({ menu }) {
@@ -28,9 +27,7 @@ function SideBar ({ menu }) {
         <nav className='sidebar'>
             <div className='sidebar-container'>
                 <div className='sidebar-logo-container'>
-                    <img
-                        src={logo}
-                        alt="logo" />
+                    <h1 style={{color:"white", textAlign:"center", fontFamily:"monospace", fontSize:"30px"}}>IoTStore</h1>
                 </div>
 
                 <div className='sidebar-container'>

@@ -6,6 +6,8 @@ import sidebar_menu from './constants/sidebar-menu';
 
 import './App.css';
 import Orders from './pages/Orders';
+import Profile from './components/Profile/Profile';
+import Login from './components/Login/Login';
 
 function App () {
   return(
@@ -19,7 +21,8 @@ function App () {
                   <Route exact path="/" element={<div></div>} />
                   <Route exact path="/orders" element={< Orders/>} />
                   <Route exact path="/locations" element={<div></div>} />
-                  <Route exact path="/profile" element={<div></div>} />
+                  <Route exact path="/profile" element={<Profile/>} />
+                  <Route exact path="/login" element={<Login/>} />
               </Routes>
           </div>
       </div>
