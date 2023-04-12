@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
+import { useState } from "react"
 
 import SideBar from './components/Sidebar';
 import sidebar_menu from './constants/sidebar-menu';
@@ -8,13 +9,18 @@ import './App.css';
 import Orders from './pages/Orders';
 import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
+import sidebar_unauth from './constants/sidebar-unauth';
 
 function App () {
+  const [active, setActive] = useState(false);
+  if(localStorage.getItem("token") !== null)
+  {
+    setActive(true);
+  }
   return(
     <Router>
       <div className='dashboard-container'>
-        <SideBar menu={sidebar_menu} />
-          
+          <SideBar menu={active ? sidebar_menu : sidebar_unauth}/>
           <div className='dashboard-body'>
               <Routes>
                   <Route path="*" element={<div></div>} />
