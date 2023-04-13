@@ -23,7 +23,7 @@ function Signup(){
     const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://localhost:7199/api/auth/register/customer";
+			const url = "https://localhost:7199/api/auth/register/customer";
 			const { data: res } = await axios.post(url, data);
 			navigate("/login");
 			console.log(res.message);
@@ -54,7 +54,7 @@ function Signup(){
                         <h3>Create Account</h3>
                         <input
                             type="text"
-                            placeholder="First Name"
+                            placeholder="UserName"
                             name="userName"
                             onChange={handleChange}
                             value={data.userName}
@@ -63,7 +63,7 @@ function Signup(){
                         />
                         <input
                             type="text"
-                            placeholder="Last Name"
+                            placeholder="Full Name"
                             name="name"
                             onChange={handleChange}
                             value={data.name}

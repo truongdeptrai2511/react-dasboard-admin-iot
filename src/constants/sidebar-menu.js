@@ -23,6 +23,12 @@ const sidebar_menu = [
         icon: ShippingIcon,
         path: '/products',
         title: 'Products',
+    },
+    {
+        id: 4,
+        icon: UserIcon,
+        path: '/profile',
+        title: 'My account',
     }
 ]
 

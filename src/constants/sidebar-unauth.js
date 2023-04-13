@@ -25,17 +25,11 @@ const sidebar_unauth = [
     {
         id: 4,
         icon: UserIcon,
-        path: '/profile',
-        title: 'My account',
-    },
-    {
-        id: 5,
-        icon: UserIcon,
         path: '/login',
         title: 'Login',
     },
     {
-        id: 6,
+        id: 5,
         icon : UserIcon,
         path: '/signup',
         title: 'Sign Up',
