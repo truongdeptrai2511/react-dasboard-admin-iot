@@ -33,6 +33,12 @@ const sidebar_unauth = [
         icon: UserIcon,
         path: '/login',
         title: 'Login',
+    },
+    {
+        id: 6,
+        icon : UserIcon,
+        path: '/signup',
+        title: 'Sign Up',
     }
 ]
 

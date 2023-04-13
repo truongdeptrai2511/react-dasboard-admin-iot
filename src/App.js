@@ -10,6 +10,7 @@ import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
 import sidebar_unauth from './constants/sidebar-unauth';
 import LogoutIcon from './assets/icons/logout.svg';
+import Signup from './components/SignUp/Signup';
 
 function App() {
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -41,17 +42,20 @@ function App() {
             <Route exact path="/locations" element={<div></div>} />
             <Route exact path="/profile" element={<Profile />} />
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/signup" element={<Signup/>} />
           </Routes>
         </div>
         <div className="sidebar-footer">
           {sidebarActive && (
-            <span className="sidebar-item-label">
-              <Link to="/login" onClick={handleLogout} style={{color:"black", backgroundColor:"white"}}>Logout</Link>
-            </span>
+            <div>
+              <span className="sidebar-item-label">
+                <Link to="/" onClick={handleLogout} style={{color:"black", backgroundColor:"white", textDecoration:"none"}}>
+                  Logout 
+                  <img src={LogoutIcon} alt="icon-logout" className="sidebar-item-icon"/>
+                </Link>
+              </span>
+            </div>
           )}
-          <Link to="/">
-            <img src={LogoutIcon} alt="icon-logout" className="sidebar-item-icon" />
-          </Link>
         </div>
       </div>
     </Router>
