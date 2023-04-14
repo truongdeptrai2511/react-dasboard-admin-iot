@@ -56,7 +56,7 @@ function SideBar ({ menu }) {
                                             fontWeight:"bold", 
                                             textDecoration:"none"
                                         }
-                                       }>Hello {formatName(payload?.fullName)}</Link></h4>
+                                       }>User {formatName(payload?.fullName)}</Link></h4>
                     </div>
                 )}
                 <div className='sidebar-container'>
