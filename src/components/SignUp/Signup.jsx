@@ -45,7 +45,7 @@ function Signup(){
                     <h1>Welcome Back</h1>
                     <Link to="/login">
                         <button type="button" className={styles.white_btn}>
-                            Sing in
+                            Sign in
                         </button>
                     </Link>
                 </div>
@@ -117,8 +117,11 @@ function Signup(){
                         />
                         {error && <div className={styles.error_msg}>{error}</div>}
                         <button type="submit" className={styles.green_btn}>
-                            Sing Up
+                            Sign Up
                         </button>
+                        <Link to="/employeerequest" style={{textDecoration:"none", color:"#4da6ff"}}>
+                            Employee registration
+                        </Link>
                     </form>
                 </div>
             </div>

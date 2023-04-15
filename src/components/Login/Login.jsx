@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import axios from 'axios';
 import { useState } from "react";
+import GetJwtTokenClaim from "../../utils/JwtTokenClaim";
 
 
 
@@ -12,6 +13,7 @@ function Login(){
     const handleChange = ({ currentTarget: input }) => {
 		setData({ ...data, [input.name]: input.value });
 	};
+
     const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {

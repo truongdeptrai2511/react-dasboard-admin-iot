@@ -11,13 +11,17 @@ import Login from './components/Login/Login';
 import sidebar_unauth from './constants/sidebar-unauth';
 import LogoutIcon from './assets/icons/logout.svg';
 import Signup from './components/SignUp/Signup';
+import EmployeeRequest from './components/SignUp/EmployeeRequest';
+import AccountCustomer from './components/Role/EmployeeRole/AccountCustomer';
+
 
 function App() {
   const [sidebarActive, setSidebarActive] = useState(false);
-  
+  const [isLogin, setIsLogin] = useState(false);
   const handleLogout = () => {
     localStorage.removeItem('token');
     setSidebarActive(false);
+    setIsLogin(false);
     window.location.reload();
   };
 
@@ -25,6 +29,7 @@ function App() {
     const token = localStorage.getItem('token');
     if (token) {
       setSidebarActive(true);
+      setIsLogin(true);
     } else {
       setSidebarActive(false);
     }
@@ -33,7 +38,7 @@ function App() {
   return (
     <Router>
       <div className="dashboard-container">
-        <SideBar menu={sidebarActive ? sidebar_menu : sidebar_unauth} />
+        <SideBar isLogin={isLogin}/>
         <div className="dashboard-body">
           <Routes>
             <Route path="*" element={<div></div>} />
@@ -43,6 +48,8 @@ function App() {
             <Route exact path="/profile" element={<Profile />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/signup" element={<Signup/>} />
+            <Route exact path="/employeerequest" element={<EmployeeRequest/>} />
+            <Route exact path="/accountcustomer" element={<AccountCustomer/>} />
           </Routes>
         </div>
         <div className="sidebar-footer">

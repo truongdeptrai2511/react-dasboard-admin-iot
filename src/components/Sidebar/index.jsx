@@ -5,14 +5,24 @@ import SideBarItem from './sidebar-item';
 
 import JwtTokenClaim from '../../utils/JwtTokenClaim';
 import './styles.css';
+import getSidebarMenu from '../../constants/sidebar-menu';
 
-function SideBar ({ menu }) {
+function SideBar ({isLogin}) {
     const location = useLocation();
     const [active, setActive] = useState(1);
-    const [isLogin, setIsLogin] = useState(false);
     const payload = JwtTokenClaim();
+    const [menu, setMenu] = useState([]);
+    
+    useEffect(() => {
+        if(payload !== null){
+            setMenu(getSidebarMenu(payload.role));
+        }
+        else{
+            setMenu(getSidebarMenu(''));
+        }
+        console.log(menu);
+    },[])
 
-    console.log(payload);
     useEffect(() => {
         menu.forEach(element => {
             if (location.pathname === element.path) {
@@ -24,10 +34,10 @@ function SideBar ({ menu }) {
     useEffect(() => {
         if (localStorage.getItem('token')) {
             console.log(localStorage.getItem('token'));
-            setIsLogin(true);
+
         }
         else {
-            setIsLogin(false);
+
         }
     },[isLogin])
 

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from './styles.scss';
 import JwtTokenClaim from '../../utils/JwtTokenClaim';
-import { Link } from "react-router-dom";
 import UserProfile from '../../assets/icons/userprofileicon.png'
 import ResetPassword from "./ResetPassword";
 function Profile () {
