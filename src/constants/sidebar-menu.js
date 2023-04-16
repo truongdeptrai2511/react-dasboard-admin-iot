@@ -2,10 +2,8 @@ import DashboardIcon from '../assets/icons/dashboard.svg';
 import ShippingIcon from '../assets/icons/shipping.svg';
 import ProductIcon from '../assets/icons/product.svg';
 import UserIcon from '../assets/icons/user.svg';
-import GetJwtTokenClaim from '../utils/JwtTokenClaim';
 
 function getSidebarMenu(role) {
-    console.log(role);
     if (role === "admin") {
       return [
         {
@@ -31,6 +29,12 @@ function getSidebarMenu(role) {
           icon: UserIcon,
           path: '/profile',
           title: 'My account',
+        },
+        {
+          id: 5,
+          icon: UserIcon,
+          path: '/registeremployee',
+          title: 'Register Employee',
         }
       ]
     }

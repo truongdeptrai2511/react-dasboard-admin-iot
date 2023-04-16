@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useHistory } from 'react-router-dom';
-
-import SideBar from './components/Sidebar';
-import sidebar_menu from './constants/sidebar-menu';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import './App.css';
+
+import SideBar from './components/Sidebar';
 import Orders from './pages/Orders';
 import Profile from './components/Profile/Profile';
 import Login from './components/Login/Login';
-import sidebar_unauth from './constants/sidebar-unauth';
 import LogoutIcon from './assets/icons/logout.svg';
 import Signup from './components/SignUp/Signup';
 import EmployeeRequest from './components/SignUp/EmployeeRequest';
 import AccountCustomer from './components/Role/EmployeeRole/AccountCustomer';
+import RegisterEmployee from './components/Role/AdminRole/RegisterEmployee/RegisterEmployee';
 
 
 function App() {
@@ -50,6 +49,7 @@ function App() {
             <Route exact path="/signup" element={<Signup/>} />
             <Route exact path="/employeerequest" element={<EmployeeRequest/>} />
             <Route exact path="/accountcustomer" element={<AccountCustomer/>} />
+            <Route exact path="/registeremployee" element={<RegisterEmployee/>} />
           </Routes>
         </div>
         <div className="sidebar-footer">
