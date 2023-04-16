@@ -35,6 +35,12 @@ function getSidebarMenu(role) {
           icon: UserIcon,
           path: '/registeremployee',
           title: 'Register Employee',
+        },
+        {
+          id: 6,
+          icon: UserIcon,
+          path: '/manageremployee',
+          title: 'Manage Employee',
         }
       ]
     }

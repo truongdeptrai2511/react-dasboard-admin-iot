@@ -1,0 +1,50 @@
+.btn-get-list {
+    padding: 0.8em;
+    margin-top: 1em;
+    margin-left: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+    cursor: pointer;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-transform: uppercase;
+    border: 1px solid #015C92;
+    background-color: #015C92;
+}
+
+.btn-get-list:hover{
+    color: #015C92;
+    border: 1px solid #015C92;
+    background-color: #F0F2F5;
+}
+
+.btn-action{
+    cursor: pointer;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-transform: uppercase;
+    border: 1px solid #067fc6;
+    background-color: #0170b0cc;
+}
+
+.btn-action:hover{
+    color: #015C92;
+    border: 1px solid #015C92;
+    background-color: #F0F2F5;
+}
+
+.register-request-container {
+    margin: 1em;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap:25px;
+    overflow: hidden;
+}

@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import axios from 'axios';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 function EmployeeRequest() {
@@ -33,6 +33,8 @@ function EmployeeRequest() {
 			console.log(res.message);
 		} catch (error) {
 			if (
+                console.log(error.response),
+                alert(error.response.data),
 				error.response &&
 				error.response.status >= 400 &&
 				error.response.status <= 500

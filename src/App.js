@@ -12,6 +12,7 @@ import Signup from './components/SignUp/Signup';
 import EmployeeRequest from './components/SignUp/EmployeeRequest';
 import AccountCustomer from './components/Role/EmployeeRole/AccountCustomer';
 import RegisterEmployee from './components/Role/AdminRole/RegisterEmployee/RegisterEmployee';
+import ManageEmployee from './components/Role/AdminRole/RegisterEmployee/ManageEmployee';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route exact path="/employeerequest" element={<EmployeeRequest/>} />
             <Route exact path="/accountcustomer" element={<AccountCustomer/>} />
             <Route exact path="/registeremployee" element={<RegisterEmployee/>} />
+            <Route exact path="/manageremployee" element={<ManageEmployee/>}/>
           </Routes>
         </div>
         <div className="sidebar-footer">
