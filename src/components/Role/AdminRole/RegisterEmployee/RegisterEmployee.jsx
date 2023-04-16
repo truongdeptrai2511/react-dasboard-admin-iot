@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import { calculateRange, sliceData } from "../../../../utils/table-pagination";
 import './styles.css';
 
 function RegisterEmployee() {
   const [error, setError] = useState("");
   const [employeeRequests, setEmployeeRequests] = useState([]);
   const [search, setSearch] = useState('');
-  const [employeeRequestsSearch, setEmployeeRequestsSearch] = useState(employeeRequests);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState([]);
 
   const handleGetListEmployeeRequests = async () => {
     try {
@@ -38,30 +40,36 @@ function RegisterEmployee() {
     }
   }
 
-    useEffect(() => {
-      handleGetListEmployeeRequests();
-    }, []);
-    
-    useEffect(() => {
-      setEmployeeRequestsSearch(employeeRequests);
-      console.log(employeeRequestsSearch);
-    },[])
 
-    // Search
-    const handleSearch = (event) => {
-      setSearch(event.target.value);
-      if (event.target.value !== '') {
-          let search_results = employeeRequestsSearch.filter((item) =>
-              item.Id.toLowerCase().includes(search.toLowerCase()) ||
-              item.Name.toLowerCase().includes(search.toLowerCase()) ||
-              item.Email.toLowerCase().includes(search.toLowerCase())
-          );
-          setEmployeeRequestsSearch(search_results);
-      }
-      else {
-          //__handleChangePage(1);
-      }
-      };
+
+  useEffect(() => {
+    handleGetListEmployeeRequests();
+    setPagination(calculateRange(employeeRequests, 5));
+    setEmployeeRequests(sliceData(employeeRequests, page, 5));
+  }, []);
+
+  // Search
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    if (event.target.value !== '') {
+        let search_results = employeeRequests.filter((item) =>
+            item.Id.toLowerCase().includes(search.toLowerCase()) ||
+            item.Name.toLowerCase().includes(search.toLowerCase()) ||
+            item.Email.toLowerCase().includes(search.toLowerCase())
+        );
+        setEmployeeRequests(search_results);
+        console.log(`Search: ${search_results}`);
+    }
+    else {
+        handleChangePage(1);
+    }
+  };
+
+      // Change Page 
+  const handleChangePage = (new_page) => {
+    setPage(new_page);
+    setEmployeeRequests(sliceData(employeeRequests, new_page, 5));
+  }
 
   return (
     <div className='register-request-container'>
@@ -109,6 +117,23 @@ function RegisterEmployee() {
                         )
           }
         </div>
+        {console.log(employeeRequests.length)}
+        {employeeRequests.length !== 0 ?
+                    <div className='dashboard-content-footer'>
+                        {pagination.map((item, index) => (
+                            <span 
+                                key={index} 
+                                className={item === page ? 'active-pagination' : 'pagination'}
+                                onClick={() => handleChangePage(item)}>
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                : 
+                    <div className='dashboard-content-footer'>
+                        <span className='empty-table'>No data</span>
+                    </div>
+          }
       </div>      
     </div>
   );
