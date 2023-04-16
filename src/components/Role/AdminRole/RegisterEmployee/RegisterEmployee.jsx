@@ -10,12 +10,17 @@ function RegisterEmployee() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState([]);
-
+  const [originalEmployeeRequests, setOriginalEmployeeRequests] = useState([]);
+  
   const handleGetListEmployeeRequests = async () => {
     try {
       const url = "https://localhost:7199/api/auth/get-list-employee-requests";
       const { data: res } = await axios.get(url);
       setEmployeeRequests(res);
+
+      setOriginalEmployeeRequests(res);
+      setPagination(calculateRange(res, 5));
+      setEmployeeRequests(sliceData(res, page, 5));
     } catch (error) {
       setError(error.message);
     }
@@ -52,24 +57,26 @@ function RegisterEmployee() {
   const handleSearch = (event) => {
     setSearch(event.target.value);
     if (event.target.value !== '') {
-        let search_results = employeeRequests.filter((item) =>
-            item.Id.toLowerCase().includes(search.toLowerCase()) ||
-            item.Name.toLowerCase().includes(search.toLowerCase()) ||
-            item.Email.toLowerCase().includes(search.toLowerCase())
+        let search_results = originalEmployeeRequests.filter((item) =>
+            item.Id.toString().toLowerCase().includes(search.toLowerCase()) ||
+            item.Name.toString().toLowerCase().includes(search.toLowerCase()) ||
+            item.Email.toString().toLowerCase().includes(search.toLowerCase())
         );
         setEmployeeRequests(search_results);
-        console.log(`Search: ${search_results}`);
+        setPagination(calculateRange(search_results, 5));
+        setPage(1);
     }
     else {
-        handleChangePage(1);
+        setEmployeeRequests(sliceData(originalEmployeeRequests, page, 5));
+        setPagination(calculateRange(originalEmployeeRequests, 5));
     }
   };
 
       // Change Page 
-  const handleChangePage = (new_page) => {
-    setPage(new_page);
-    setEmployeeRequests(sliceData(employeeRequests, new_page, 5));
-  }
+      const handleChangePage = (new_page) => {
+        setPage(new_page);
+        setEmployeeRequests(sliceData(originalEmployeeRequests, new_page, 5));
+      }
 
   return (
     <div className='register-request-container'>
@@ -117,7 +124,6 @@ function RegisterEmployee() {
                         )
           }
         </div>
-        {console.log(employeeRequests.length)}
         {employeeRequests.length !== 0 ?
                     <div className='dashboard-content-footer'>
                         {pagination.map((item, index) => (
