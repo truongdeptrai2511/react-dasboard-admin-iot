@@ -14,7 +14,32 @@ function ManageEmployee() {
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState([]);
     const [originalEmployeeList, setOriginalEmployeeList] = useState([]);
+    const [data, setData] = useState({
+        FullName: "",
+        Email: "",
+        CitizenIdentification: "",
+        Username: ""
+    })
     //#endregion Constants
+
+    const handleUpdate = (id, event) => {
+        setData({ ...data, [event.target.name]: event.target.value });
+        console.log("data" + data);
+        try {
+            const url = `https://localhost:7199/api/Employee/${id}`;
+            const { data: res } = axios.put(url, data);
+            setEmployeeList(res);
+            setOriginalEmployeeList(res);
+            setPagination(calculateRange(res, 5));
+            setEmployeeList(sliceData(res, page, 5));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+
+
+
     const handleGetListEmp = async () => {
         try {
             const url = "https://localhost:7199/api/employee";
@@ -47,6 +72,7 @@ function ManageEmployee() {
 
     useEffect(() => {
         handleGetListEmp();
+        console.log(employeeList);
         setPagination(calculateRange(employeeList, 5));
         setEmployeeList(sliceData(employeeList, page, 5));
     }, [])
@@ -91,17 +117,43 @@ function ManageEmployee() {
                     <table>
                         <tbody>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
+                                <th>Username</th>
+                                <th>FullName</th>
                                 <th>Email</th>
+                                <th>CitizenIdentification</th>
                                 <th>Action</th>
                             </tr>
                             {
                                 employeeList.map(request => (
                                     <tr key={request.Id}>
-                                        <td>{request.Id}</td>
-                                        <td>{request.FullName}</td>
-                                        <td>{request.Email}</td>
+                                        <td style={{ maxWidth: "50px" }}>
+                                            <input
+                                                type='text'
+                                                value={request.UserName}
+                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type='text'
+                                                value={request.FullName}
+                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type='text'
+                                                value={request.Email}
+                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type='text'
+                                                value={request.CitizenIdentification}
+                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                            />
+                                        </td>
                                         <td>
                                             <button className='btn-del' onClick={() => handleDelete(request.Id)} style={{ display: "block" }}>x</button>
                                         </td>
