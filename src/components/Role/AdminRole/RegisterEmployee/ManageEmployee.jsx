@@ -22,24 +22,6 @@ function ManageEmployee() {
     })
     //#endregion Constants
 
-    const handleUpdate = (id, event) => {
-        setData({ ...data, [event.target.name]: event.target.value });
-        console.log("data" + data);
-        try {
-            const url = `https://localhost:7199/api/Employee/${id}`;
-            const { data: res } = axios.put(url, data);
-            setEmployeeList(res);
-            setOriginalEmployeeList(res);
-            setPagination(calculateRange(res, 5));
-            setEmployeeList(sliceData(res, page, 5));
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
-
-
-
     const handleGetListEmp = async () => {
         try {
             const url = "https://localhost:7199/api/employee";
@@ -101,6 +83,20 @@ function ManageEmployee() {
         setPage(new_page);
         setEmployeeList(sliceData(originalEmployeeList, new_page, 5));
     }
+    
+    const handleUpdate = (id, event) => {
+        setData({ ...data, [event.target.name]: event.target.value });
+        try {
+            const url = `https://localhost:7199/api/Employee/${id}`;
+            const { data: res } = axios.put(url, data);
+            setEmployeeList(res);
+            setOriginalEmployeeList(res);
+            setPagination(calculateRange(res, 5));
+            setEmployeeList(sliceData(res, page, 5));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
     return (
         <div className="manage-employee-container">
             <div className='manage-employee-header'>
