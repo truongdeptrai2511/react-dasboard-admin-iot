@@ -96,12 +96,21 @@
     overflow: hidden;
 }
 
+.input-info{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    border-style: none;
+    width: 150px;
+}
+
 .btn-del{
+    margin-left: 1em;
     cursor: pointer;
     color: #FFFFFF;
-    font-size: 0.9rem;
-    font-weight: 700;
-    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
     text-transform: uppercase;
     border: 1px solid #f44444;
     background-color: #e12d2d;
@@ -110,5 +119,22 @@
 .btn-del:hover{
     color: #e31818;
     border: 1px solid #f44444;
+    background-color: #F0F2F5;
+}
+
+.btn-save{
+    cursor: pointer;
+    color: #FFFFFF;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    border: 1px solid #2c89ec;
+    background-color: #247fd5;
+}
+
+.btn-save:hover{
+    color: #186de3;
+    border: 1px solid #448df4;
     background-color: #F0F2F5;
 }

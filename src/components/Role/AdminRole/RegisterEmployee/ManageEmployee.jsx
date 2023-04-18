@@ -14,12 +14,7 @@ function ManageEmployee() {
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState([]);
     const [originalEmployeeList, setOriginalEmployeeList] = useState([]);
-    const [data, setData] = useState({
-        FullName: "",
-        Email: "",
-        CitizenIdentification: "",
-        Username: ""
-    })
+    const [reload, setReload] = useState(false);
     //#endregion Constants
 
     const handleGetListEmp = async () => {
@@ -30,7 +25,6 @@ function ManageEmployee() {
                     Authorization: localStorage.getItem("token"),
                 },
             });
-            setEmployeeList(res);
             setOriginalEmployeeList(res);
             setPagination(calculateRange(res, 5));
             setEmployeeList(sliceData(res, page, 5));
@@ -54,10 +48,11 @@ function ManageEmployee() {
 
     useEffect(() => {
         handleGetListEmp();
-        console.log(employeeList);
-        setPagination(calculateRange(employeeList, 5));
-        setEmployeeList(sliceData(employeeList, page, 5));
     }, [])
+    useEffect(() => {
+        setPagination(calculateRange(originalEmployeeList, 5));
+        setEmployeeList(sliceData(originalEmployeeList, page, 5));
+    }, [originalEmployeeList, page]);    
 
     // Search
     const handleSearch = (event) => {
@@ -83,16 +78,29 @@ function ManageEmployee() {
         setPage(new_page);
         setEmployeeList(sliceData(originalEmployeeList, new_page, 5));
     }
-    
-    const handleUpdate = (id, event) => {
-        setData({ ...data, [event.target.name]: event.target.value });
+    // Update info
+    const handleInputChange = (id, field, value) => {
+        setEmployeeList((prevList) =>
+            prevList.map((employee) => (employee.Id === id ? { ...employee, [field]: value } : employee))
+        );
+        setReload(!reload);
+    };
+    const handleSubmit =async (id) => {
         try {
             const url = `https://localhost:7199/api/Employee/${id}`;
-            const { data: res } = axios.put(url, data);
+            const { data: res } = await axios.put(
+                url,
+                employeeList.find((employee) => employee.Id === id),
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                }
+            );
+            console.log(res)
+            const newPage = Math.ceil(res.findIndex((employee) => employee.Id === id) / 5) + 1;
+            setPage(newPage);
             setEmployeeList(res);
-            setOriginalEmployeeList(res);
-            setPagination(calculateRange(res, 5));
-            setEmployeeList(sliceData(res, page, 5));
         } catch (error) {
             setError(error.message);
         }
@@ -120,38 +128,44 @@ function ManageEmployee() {
                                 <th>Action</th>
                             </tr>
                             {
-                                employeeList.map(request => (
+                                Array.isArray(employeeList) && employeeList.map(request => (
                                     <tr key={request.Id}>
                                         <td style={{ maxWidth: "50px" }}>
                                             <input
-                                                type='text'
+                                                style={{width: "100px"}}
+                                                className="input-info"
+                                                type="text"
                                                 value={request.UserName}
-                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                                onChange={(event) => handleInputChange(request.Id, "UserName", event.target.value)}
                                             />
                                         </td>
                                         <td>
                                             <input
-                                                type='text'
+                                                className="input-info"
+                                                type="text"
                                                 value={request.FullName}
-                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                                onChange={(event) => handleInputChange(request.Id, "FullName", event.target.value)}
                                             />
                                         </td>
                                         <td>
                                             <input
-                                                type='text'
+                                                className="input-info"
+                                                type="text"
                                                 value={request.Email}
-                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                                onChange={(event) => handleInputChange(request.Id, "Email", event.target.value)}
                                             />
                                         </td>
                                         <td>
                                             <input
-                                                type='text'
+                                                className="input-info"
+                                                type="text"
                                                 value={request.CitizenIdentification}
-                                                onChange={(event) => handleUpdate(request.Id, event)}
+                                                onChange={(event) => handleInputChange(request.Id, "CitizenIdentification", event.target.value)}
                                             />
                                         </td>
                                         <td>
-                                            <button className='btn-del' onClick={() => handleDelete(request.Id)} style={{ display: "block" }}>x</button>
+                                            <button className="btn-save" onClick={() => handleSubmit(request.Id)}>Save</button>
+                                            <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
                                         </td>
                                     </tr>
                                 ))}
