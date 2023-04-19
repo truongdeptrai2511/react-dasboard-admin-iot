@@ -6,7 +6,7 @@ import GetJwtTokenClaim from "../../utils/JwtTokenClaim";
 
 function ResetPassword() {
   const payload = GetJwtTokenClaim()
-  const [data, setData] = useState({ email: `${payload.email}2023@gmail.com`, oldPassword: "", newPassword: "", retypeNewPassword: "" });
+  const [data, setData] = useState({ email: `${payload.email}@gmail.com`, oldPassword: "", newPassword: "", retypeNewPassword: "" });
   const [errors, setErrors] = useState({
     oldPassword: '',
     newPassword: '',
@@ -65,6 +65,7 @@ function ResetPassword() {
         const requestData = { email: data.email, oldPassword: data.oldPassword, newPassword: data.newPassword };
         await axios.post(url, requestData)
         navigate("/");
+        alert("Password changed successfully");
         console.log("Change password success")
         window.location.reload();
       } catch (error) {

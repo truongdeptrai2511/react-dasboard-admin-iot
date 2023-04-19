@@ -76,30 +76,27 @@ function getSidebarMenu(role) {
       return [
         {
           id: 1,
-          icon: DashboardIcon,
-          path: '/',
-          title: 'Dashboard',
+          icon: UserIcon,
+          path: '/accountcustomer',
+          title: 'Manage customer',
+          //Quan ly khach hang  
         },
         {
           id: 2,
-          icon: ProductIcon,
-          path: '/orders',
-          title: 'Orders',
-        },
-        {
-          id: 3,
           icon: ShippingIcon,
           path: '/products',
           title: 'Products',
+          //Quan ly kho hang
+        },
+        {
+          id: 3,
+          icon: ProductIcon,
+          path: '/orders',
+          title: 'Orders',
+          //Quan ly don hang
         },
         {
           id: 4,
-          icon: UserIcon,
-          path: '/accountcustomer',
-          title: 'Customer account',
-        },
-        {
-          id: 5,
           icon: UserIcon,
           path: '/profile',
           title: 'My account',

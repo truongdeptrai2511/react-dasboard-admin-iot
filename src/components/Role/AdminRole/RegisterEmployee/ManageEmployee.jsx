@@ -165,6 +165,7 @@ function ManageEmployee() {
                                         </td>
                                         <td>
                                             <input
+                                                disabled
                                                 className="input-info"
                                                 type="text"
                                                 value={request.Email}
