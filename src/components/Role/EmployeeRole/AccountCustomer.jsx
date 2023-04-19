@@ -13,38 +13,60 @@ function AccountCustomer() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
     const payload = GetJwtTokenClaim();
-    const getCusList = async () => {
+    // const getCusList = async () => {
+    //     try {
+    //       const url = 'https://localhost:7199/api/customer';
+    //       const response = await axios.get(url, {
+    //         headers: {
+    //           Authorization: localStorage.getItem('token'),
+    //         },
+    //       });
+    //       const filteredData = response.data.filter(element => element.CitizenIdentification === null);
+    //       setCusList(() => {
+    //         setPagination(calculateRange(filteredData, 5));
+    //         return sliceData(filteredData, page, 5);
+    //       });
+    //       setOriginalCusList(filteredData);
+    //     } catch (error) {
+    //       setError(error.message);
+    //     }
+    //   };
+      
+
+    // Delete an cus from the list
+    const handleDelete = async (id) => {
         try {
-            const url = 'https://localhost:7199/api/customer';
-            const response = await axios.get(url, {
+            await axios.delete(`https://localhost:7199/api/customer/${id}`, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
-            const filteredData = response.data.filter(element => element.CitizenIdentification === null);
-            setCusList(filteredData);
-            // setOriginalCusList(cusList);
-            // setPagination(calculateRange(cusList, 5));
-            // setCusList(sliceData(cusList, page, 5));
+            setCusList(cusList.filter((customer) => customer.Id !== id));
+            setOriginalCusList(cusList);
         } catch (error) {
             setError(error.message);
         }
     };
 
-      // Delete an cus from the list
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://localhost:7199/api/customer/${id}`, {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-        },
-      });
-      setCusList(cusList.filter((customer) => customer.Id !== id));
-      setOriginalCusList(cusList);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+    // Search for employees
+    const handleSearch = (event) => {
+        setSearch(event.target.value);
+        if (event.target.value !== '') {
+            const searchResults = originalCusList.filter(
+                (customer) =>
+                    customer.UserName.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    customer.FullName.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    customer.Email.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    customer.Address.toString().toLowerCase().includes(search.toLowerCase())
+            );
+            setCusList(searchResults);
+            setPagination(calculateRange(searchResults, 5));
+            setPage(1);
+        } else {
+            setCusList(sliceData(originalCusList, page, 5));
+            setPagination(calculateRange(originalCusList, 5));
+        }
+    };
 
     // Update an cus's information
     const handleInputChange = (id, field, value) => {
@@ -55,6 +77,11 @@ function AccountCustomer() {
         );
         //setUpdatedFields((prevFields) => ({ ...prevFields, [id]: true }));
     };
+      // Change the current page
+  const handleChangePage = (newPage) => {
+    setPage(newPage);
+    setCusList(sliceData(originalCusList, newPage, 5));
+  };
 
     useEffect(() => {
         getCusList();
@@ -62,7 +89,8 @@ function AccountCustomer() {
     }, [originalCusList])
     useEffect(() => {
         getCusList();
-        console.log(cusList);
+        console.log(`cusList: ${cusList}`);
+        
     }, [])
     return (
         <div className="account-cus-container">
@@ -70,8 +98,16 @@ function AccountCustomer() {
                 <h1>
                     Account Customer
                 </h1>
+                <input
+                    type='text'
+                    value={search}
+                    placeholder='Search..'
+                    className='register-employee-content-input'
+                    onChange={handleSearch}
+                />
             </div>
             <div className='account-cus-body'>
+                {console.log(cusList)}
                 {cusList.length > 0 ?
                     <div className="cus-list">
                         <table>
@@ -84,7 +120,7 @@ function AccountCustomer() {
                                     <th>Action</th>
                                 </tr>
                                 {
-                                    Array.isArray(cusList) && cusList.map(request => (
+                                    cusList.map(request => (
                                         <><tr key={request.Id}>
                                             <td style={{ maxWidth: "50px" }}>
                                                 <input
@@ -127,6 +163,22 @@ function AccountCustomer() {
                         <div style={{ padding: " 1em 0 0 1em" }}>No employee found.</div>
                     )
                 }
+                {cusList.length !== 0 ?
+        <div className='dashboard-content-footer'>
+          {pagination.map((item, index) => (
+            <span
+              key={index}
+              className={item === page ? 'active-pagination' : 'pagination'}
+              onClick={() => handleChangePage(item)}>
+              {item}
+            </span>
+          ))}
+        </div>
+        :
+        <div className='dashboard-content-footer'>
+          <span className='empty-table'>No data</span>
+        </div>
+      }
             </div>
         </div>
     );
