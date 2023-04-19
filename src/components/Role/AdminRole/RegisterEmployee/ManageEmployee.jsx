@@ -1,133 +1,149 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import { calculateRange, sliceData } from "../../../../utils/table-pagination";
+import { calculateRange, sliceData } from '../../../../utils/table-pagination';
 import './styles.css';
-import GetJwtTokenClaim from "../../../../utils/JwtTokenClaim"
+import GetJwtTokenClaim from '../../../../utils/JwtTokenClaim';
 
 function ManageEmployee() {
-    //#region Constants
-    const [error, setError] = useState("");
-    const [employeeList, setEmployeeList] = useState([]);
-    const payload = GetJwtTokenClaim();
-    const [search, setSearch] = useState('');
-    const [page, setPage] = useState(1);
-    const [pagination, setPagination] = useState([]);
-    const [originalEmployeeList, setOriginalEmployeeList] = useState([]);
-    const [reload, setReload] = useState(false);
-    //#endregion Constants
+  // Define state variables
+  const [error, setError] = useState('');
+  const [employeeList, setEmployeeList] = useState([]);
+  const [originalEmployeeList, setOriginalEmployeeList] = useState([]);
+  const [pagination, setPagination] = useState([]);
+  const [page, setPage] = useState(1);
+  const [reload, setReload] = useState(false);
+  const [search, setSearch] = useState('');
+  const [updatedFields, setUpdatedFields] = useState({});
+  // Get the JWT token claim
+  const payload = GetJwtTokenClaim();
 
-    const handleGetListEmp = async () => {
-        try {
-            const url = "https://localhost:7199/api/employee";
-            const { data: res } = await axios.get(url, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            setOriginalEmployeeList(res);
-            setPagination(calculateRange(res, 5));
-            setEmployeeList(sliceData(res, page, 5));
-        } catch (error) {
-            setError(error.message);
-        }
+  // Fetch the list of employees from the API
+  const handleGetListEmp = async () => {
+    try {
+      const url = 'https://localhost:7199/api/employee';
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      });
+      const employeeList = response.data;
+      setOriginalEmployeeList(employeeList);
+      setPagination(calculateRange(employeeList, 5));
+      setEmployeeList(sliceData(employeeList, page, 5));
+    } catch (error) {
+      setError(error.message);
     }
+  };
 
-    async function handleDelete(id) {
-        try {
-            await axios.delete(`https://localhost:7199/api/Employee/id?id=${id}`, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            setEmployeeList(employeeList.filter(request => request.Id !== id));
-        } catch (error) {
-            setError(error.message);
-        }
+  // Delete an employee from the list
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://localhost:7199/api/Employee/id?id=${id}`, {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      });
+      setEmployeeList(employeeList.filter((employee) => employee.Id !== id));
+    } catch (error) {
+      setError(error.message);
     }
+  };
 
-    useEffect(() => {
-        handleGetListEmp();
-    }, [])
-    useEffect(() => {
-        setPagination(calculateRange(originalEmployeeList, 5));
-        setEmployeeList(sliceData(originalEmployeeList, page, 5));
-    }, [originalEmployeeList, page]);    
-
-    // Search
-    const handleSearch = (event) => {
-        setSearch(event.target.value);
-        if (event.target.value !== '') {
-            let search_results = originalEmployeeList.filter((item) =>
-                item.Id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                item.FullName.toString().toLowerCase().includes(search.toLowerCase()) ||
-                item.Email.toString().toLowerCase().includes(search.toLowerCase())
-            );
-            setEmployeeList(search_results);
-            setPagination(calculateRange(search_results, 5));
-            setPage(1);
-        }
-        else {
-            setEmployeeList(sliceData(originalEmployeeList, page, 5));
-            setPagination(calculateRange(originalEmployeeList, 5));
-        }
-    };
-
-    // Change Page 
-    const handleChangePage = (new_page) => {
-        setPage(new_page);
-        setEmployeeList(sliceData(originalEmployeeList, new_page, 5));
+  // Search for employees
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    if (event.target.value !== '') {
+      const searchResults = originalEmployeeList.filter(
+        (employee) =>
+          employee.Id.toString().toLowerCase().includes(search.toLowerCase()) ||
+          employee.FullName.toString().toLowerCase().includes(search.toLowerCase()) ||
+          employee.Email.toString().toLowerCase().includes(search.toLowerCase())
+      );
+      setEmployeeList(searchResults);
+      setPagination(calculateRange(searchResults, 5));
+      setPage(1);
+    } else {
+      setEmployeeList(sliceData(originalEmployeeList, page, 5));
+      setPagination(calculateRange(originalEmployeeList, 5));
     }
-    // Update info
-    const handleInputChange = (id, field, value) => {
-        setEmployeeList((prevList) =>
-            prevList.map((employee) => (employee.Id === id ? { ...employee, [field]: value } : employee))
-        );
-        setReload(!reload);
-    };
-    const handleSubmit =async (id) => {
-        try {
-            const url = `https://localhost:7199/api/Employee/${id}`;
-            const { data: res } = await axios.put(
-                url,
-                employeeList.find((employee) => employee.Id === id),
-                {
-                    headers: {
-                        Authorization: localStorage.getItem("token"),
-                    },
-                }
-            );
-            console.log(res)
-            const newPage = Math.ceil(res.findIndex((employee) => employee.Id === id) / 5) + 1;
-            setPage(newPage);
-            setEmployeeList(res);
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-    return (
-        <div className="manage-employee-container">
-            <div className='manage-employee-header'>
-                <h1>Manage Employee</h1>
-                <input
-                    type='text'
-                    value={search}
-                    placeholder='Search..'
-                    className='register-employee-content-input'
-                    onChange={e => handleSearch(e)} />
-            </div>
-            {employeeList.length > 0 ?
-                <div className="employee-list">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Username</th>
-                                <th>FullName</th>
-                                <th>Email</th>
-                                <th>CitizenIdentification</th>
-                                <th>Action</th>
-                            </tr>
-                            {
+  };
+
+  // Change the current page
+  const handleChangePage = (newPage) => {
+    setPage(newPage);
+    setEmployeeList(sliceData(originalEmployeeList, newPage, 5));
+  };
+
+  // Update an employee's information
+  const handleInputChange = (id, field, value) => {
+    setEmployeeList((prevList) =>
+      prevList.map((employee) =>
+        employee.Id === id ? { ...employee, [field]: value } : employee
+      )
+    );
+    setUpdatedFields((prevFields) => ({ ...prevFields, [id]: true }));
+  };
+
+  // Submit updated information to the API
+  const handleSubmit = async (employee) => {
+    try {
+      if (updatedFields[employee.Id]) {
+        const url = `https://localhost:7199/api/Employee/${employee.Id}`;
+        const response = await axios.put(url, employee, {
+          headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+        });
+        
+        // Update the employeeList state with the new data
+        const updatedEmployeeList = employeeList.map((item) => {
+          if (item.Id === employee.Id) {
+            return {
+              ...item,
+              ...employee,
+            };
+          }
+          return item;
+        });
+        setEmployeeList(updatedEmployeeList);
+        
+        // Reset the updatedFields state for the updated employee
+        setUpdatedFields((prevFields) => ({ ...prevFields, [employee.Id]: false }));
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  
+
+  // Load employee list when component mounts
+  useEffect(() => {
+    handleGetListEmp();
+  }, []);
+  return (
+    <div className="manage-employee-container">
+      <div className='manage-employee-header'>
+        <h1>Manage Employee</h1>
+        <input
+          type='text'
+          value={search}
+          placeholder='Search..'
+          className='register-employee-content-input'
+          onChange={handleSearch}
+        />
+      </div>
+      {employeeList.length > 0 ?
+        <div className="employee-list">
+          <table>
+            <tbody>
+              <tr>
+                <th>Username</th>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>CitizenIdentification</th>
+                <th>Action</th>
+              </tr>
+              {
                                 Array.isArray(employeeList) && employeeList.map(request => (
                                     <tr key={request.Id}>
                                         <td style={{ maxWidth: "50px" }}>
@@ -169,30 +185,31 @@ function ManageEmployee() {
                                         </td>
                                     </tr>
                                 ))}
-                        </tbody>
-                    </table>
-                </div> : (
-                    <div style={{ padding: " 1em 0 0 1em" }}>No employee found.</div>
-                )
-            }
-            {employeeList.length !== 0 ?
-                <div className='dashboard-content-footer'>
-                    {pagination.map((item, index) => (
-                        <span
-                            key={index}
-                            className={item === page ? 'active-pagination' : 'pagination'}
-                            onClick={() => handleChangePage(item)}>
-                            {item}
-                        </span>
-                    ))}
-                </div>
-                :
-                <div className='dashboard-content-footer'>
-                    <span className='empty-table'>No data</span>
-                </div>
-            }
+
+            </tbody>
+          </table>
+        </div> : (
+          <div style={{ padding: " 1em 0 0 1em" }}>No employee found.</div>
+        )
+      }
+      {employeeList.length !== 0 ?
+        <div className='dashboard-content-footer'>
+          {pagination.map((item, index) => (
+            <span
+              key={index}
+              className={item === page ? 'active-pagination' : 'pagination'}
+              onClick={() => handleChangePage(item)}>
+              {item}
+            </span>
+          ))}
         </div>
-    )
+        :
+        <div className='dashboard-content-footer'>
+          <span className='empty-table'>No data</span>
+        </div>
+      }
+    </div>
+  )
 }
 
 export default ManageEmployee
