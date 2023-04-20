@@ -4,6 +4,7 @@ import axios from 'axios';
 import { calculateRange, sliceData } from '../../../utils/table-pagination';
 import GetJwtTokenClaim from '../../../utils/JwtTokenClaim';
 import './styles.scss';
+import $ from 'jquery';
 
 function AccountCustomer() {
     const [error, setError] = useState('');
@@ -13,40 +14,35 @@ function AccountCustomer() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
     const payload = GetJwtTokenClaim();
-    // const getCusList = async () => {
-    //     try {
-    //       const url = 'https://localhost:7199/api/customer';
-    //       const response = await axios.get(url, {
-    //         headers: {
-    //           Authorization: localStorage.getItem('token'),
-    //         },
-    //       });
-    //       const filteredData = response.data.filter(element => element.CitizenIdentification === null);
-    //       setCusList(() => {
-    //         setPagination(calculateRange(filteredData, 5));
-    //         return sliceData(filteredData, page, 5);
-    //       });
-    //       setOriginalCusList(filteredData);
-    //     } catch (error) {
-    //       setError(error.message);
-    //     }
-    //   };
-      
-
-    // Delete an cus from the list
-    const handleDelete = async (id) => {
+    const getCusList = async () => {
         try {
-            await axios.delete(`https://localhost:7199/api/customer/${id}`, {
+            const url = 'https://localhost:7199/api/customer';
+            const response = await axios.get(url, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
-            setCusList(cusList.filter((customer) => customer.Id !== id));
-            setOriginalCusList(cusList);
+            setOriginalCusList(response.data.filter(customer => customer.CitizenIdentification === null));
         } catch (error) {
             setError(error.message);
         }
     };
+
+
+// Delete an cus from the list
+const handleDelete = (id) => {
+    $.ajax({
+        url: `https://localhost:7199/api/customer/${id}`,
+        type: "DELETE",
+        headers: {
+            Authorization: localStorage.getItem('token'),
+        },
+        success: function() {
+            setOriginalCusList(originalCusList.filter((customer) => customer.Id !== id));
+            setCusList(originalCusList.filter((customer) => customer.Id !== id));
+        }
+    });
+};
 
     // Search for employees
     const handleSearch = (event) => {
@@ -77,21 +73,23 @@ function AccountCustomer() {
         );
         //setUpdatedFields((prevFields) => ({ ...prevFields, [id]: true }));
     };
-      // Change the current page
-  const handleChangePage = (newPage) => {
-    setPage(newPage);
-    setCusList(sliceData(originalCusList, newPage, 5));
-  };
+    // Change the current page
+    const handleChangePage = (newPage) => {
+        setPage(newPage);
+        const filteredData = originalCusList.filter(element => element.CitizenIdentification === null);
+        setCusList(sliceData(filteredData, newPage, 5));
+    };
 
     useEffect(() => {
         getCusList();
-        console.log(cusList);
-    }, [originalCusList])
+    }, []);
+
     useEffect(() => {
-        getCusList();
-        console.log(`cusList: ${cusList}`);
-        
-    }, [])
+        const filteredData = originalCusList.filter(element => element.CitizenIdentification === null);
+        setPagination(calculateRange(filteredData, 5));
+        setCusList(sliceData(filteredData, page, 5));
+    }, [originalCusList, page]);
+
     return (
         <div className="account-cus-container">
             <div className='account-cus-header'>
@@ -164,21 +162,21 @@ function AccountCustomer() {
                     )
                 }
                 {cusList.length !== 0 ?
-        <div className='dashboard-content-footer'>
-          {pagination.map((item, index) => (
-            <span
-              key={index}
-              className={item === page ? 'active-pagination' : 'pagination'}
-              onClick={() => handleChangePage(item)}>
-              {item}
-            </span>
-          ))}
-        </div>
-        :
-        <div className='dashboard-content-footer'>
-          <span className='empty-table'>No data</span>
-        </div>
-      }
+                    <div className='dashboard-content-footer'>
+                        {pagination.map((item, index) => (
+                            <span
+                                key={index}
+                                className={item === page ? 'active-pagination' : 'pagination'}
+                                onClick={() => handleChangePage(item)}>
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                    :
+                    <div className='dashboard-content-footer'>
+                        <span className='empty-table'>No data</span>
+                    </div>
+                }
             </div>
         </div>
     );

@@ -1,16 +1,16 @@
-const calculateRange = (data, rowsPerPage) => {
-    const range = [];
-    const num = Math.ceil(data.length / rowsPerPage);
-    for (let i = 1; i <= num; i++) {
-        range.push(i);
-    }
-    return range;
+// Helper function to calculate the pagination range
+function calculateRange(data, perPage) {
+    const pages = Math.ceil(data.length / perPage);
+    const pagination = Array.from({ length: pages }, (_, i) => i + 1);
+    return pagination;
 }
 
-const sliceData = (data, page, rowsPerPage) => {
-    return data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-}  
-
+// Helper function to slice data based on current page and items per page
+function sliceData(data, currentPage, perPage) {
+    const startIndex = (currentPage - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    return data.slice(startIndex, endIndex);
+}
 export {
     calculateRange,
     sliceData
