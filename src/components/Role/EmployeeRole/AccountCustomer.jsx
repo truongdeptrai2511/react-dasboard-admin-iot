@@ -14,6 +14,7 @@ function AccountCustomer() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
     const payload = GetJwtTokenClaim();
+    const [updatedFields, setUpdatedFields] = useState({});
     const getCusList = async () => {
         try {
             const url = 'https://localhost:7199/api/customer';
@@ -29,20 +30,20 @@ function AccountCustomer() {
     };
 
 
-// Delete an cus from the list
-const handleDelete = (id) => {
-    $.ajax({
-        url: `https://localhost:7199/api/customer/${id}`,
-        type: "DELETE",
-        headers: {
-            Authorization: localStorage.getItem('token'),
-        },
-        success: function() {
-            setOriginalCusList(originalCusList.filter((customer) => customer.Id !== id));
-            setCusList(originalCusList.filter((customer) => customer.Id !== id));
-        }
-    });
-};
+    // Delete an cus from the list
+    const handleDelete = (id) => {
+        $.ajax({
+            url: `https://localhost:7199/api/customer/${id}`,
+            type: "DELETE",
+            headers: {
+                Authorization: localStorage.getItem('token'),
+            },
+            success: function () {
+                setOriginalCusList(originalCusList.filter((customer) => customer.Id !== id));
+                setCusList(originalCusList.filter((customer) => customer.Id !== id));
+            }
+        });
+    };
 
     // Search for employees
     const handleSearch = (event) => {
@@ -63,7 +64,33 @@ const handleDelete = (id) => {
             setPagination(calculateRange(originalCusList, 5));
         }
     };
-
+    // Update an cus
+    const handleSubmit = async (id) => {
+        try {
+            const url = `https://localhost:7199/api/customer/${id}`;
+            const data = cusList.find((cus) => cus.Id === id);
+            console.log(data);
+            const response = await axios.put(url, data, {
+                headers: {
+                    Authorization: localStorage.getItem("token"),
+                },
+            });
+            // Update the cuslist state with the new data
+        const updateCusList = cusList.map((item) => {
+            if (item.Id === data.Id) {
+              return {
+                ...item,
+                ...data,
+              };
+            }
+            return item;
+          });
+          setCusList(updateCusList);
+          setUpdatedFields((prevFields) => ({ ...prevFields, [data.Id]: false }));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
     // Update an cus's information
     const handleInputChange = (id, field, value) => {
         setCusList((prevList) =>
@@ -102,6 +129,7 @@ const handleDelete = (id) => {
                     placeholder='Search..'
                     className='register-employee-content-input'
                     onChange={handleSearch}
+                    style={{ float: "right" }}
                 />
             </div>
             <div className='account-cus-body'>
@@ -150,7 +178,7 @@ const handleDelete = (id) => {
                                                     onChange={(event) => handleInputChange(request.Id, "Address", event.target.value)} />
                                             </td>
                                             <td>
-                                                {/* <button className="btn-save" onClick={() => handleSubmit(request.Id)}>Save</button> */}
+                                                <button className="btn-save" onClick={() => handleSubmit(request.Id)}>Save</button>
                                                 <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
                                             </td>
                                         </tr></>
