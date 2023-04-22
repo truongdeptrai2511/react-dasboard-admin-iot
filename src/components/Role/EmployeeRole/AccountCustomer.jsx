@@ -33,14 +33,16 @@ function AccountCustomer() {
     //refresh the list of cus
     const refreshCustomerList = async () => {
         try {
-            const url = "https://localhost:7199/api/customer";
+            const url = 'https://localhost:7199/api/customer';
             const response = await axios.get(url, {
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },
             });
             const data = response.data;
+            console.log(data);
             const filteredData = data.filter(element => element.CitizenIdentification === null);
+            console.log(filteredData);
             setPagination(calculateRange(filteredData, 5));
             setCusList(sliceData(filteredData, page, 5));
         } catch (error) {
@@ -179,7 +181,7 @@ function AccountCustomer() {
                                 </tr>
                                 {
                                     cusList.map(request => (
-                                        <><tr key={request.Id}>
+                                        <tr key={request.Id}>
                                             <td style={{ maxWidth: "50px" }}>
                                                 <input
                                                     style={{ width: "100px" }}
@@ -213,7 +215,7 @@ function AccountCustomer() {
                                                 <button className="btn-save" onClick={() => { handleSubmit(request.Id) }}>Save</button>
                                                 <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
                                             </td>
-                                        </tr></>
+                                        </tr>
                                     ))}
                             </tbody>
                         </table>
