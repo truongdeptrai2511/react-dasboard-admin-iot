@@ -33,20 +33,23 @@ function AccountCustomer() {
     //refresh the list of cus
     const refreshCustomerList = async () => {
         try {
-          const url = "https://localhost:7199/api/customer";
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          });
-          const customers = response.data;
-          setCusList(customers);
-          console.log(customers);
+            const url = "https://localhost:7199/api/customer";
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: localStorage.getItem("token"),
+                },
+            });
+            const data = response.data;
+            const filteredData = data.filter(element => element.CitizenIdentification === null);
+            setPagination(calculateRange(filteredData, 5));
+            setCusList(sliceData(filteredData, page, 5));
         } catch (error) {
-          setError(error.message);
+            setError(error.message);
         }
-      };
-      
+    };
+
+
+
 
     // Delete an cus from the list
     const handleDelete = (id) => {
@@ -62,6 +65,7 @@ function AccountCustomer() {
             }
         });
     };
+
 
     // Search for employees
     const handleSearch = (event) => {
@@ -84,29 +88,33 @@ function AccountCustomer() {
     };
     // Update an cus        
     const handleSubmit = async (id) => {
-        setLoading(true);
-    try {
         const url = `https://localhost:7199/api/customer/${id}`;
         const updatedCus = cusList.find((customer) => customer.Id === id);
-        await axios.put(url, updatedCus, {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
-        });
-        console.log(updatedCus);
-        setUpdatedFields((prevFields) => ({ ...prevFields, [id]: false }));
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-        refreshCustomerList();
-      }
+        axios
+            .put(url, updatedCus, {
+                headers: {
+                    Authorization: localStorage.getItem('token'),
+                },
+            })
+            .then(() => {
+                setUpdatedFields(prevFields => ({ ...prevFields, [id]: false }));
+                console.log(updatedCus);
+                setOriginalCusList((prevList) => [...prevList.filter((customer) => customer.Id !== id), updatedCus]);
+                refreshCustomerList();
+                setLoading(false);
+            })
+            .catch(error => {
+                setError(error.message);
+                setLoading(false);
+            });
     };
+
+
     useEffect(() => {
         if (!loading) {
-          getCusList();
+            getCusList();
         }
-      }, [loading]);
+    }, [loading]);
     // Update an cus's information
     const handleInputChange = (id, field, value) => {
         setCusList((prevList) =>
@@ -114,8 +122,17 @@ function AccountCustomer() {
                 cus.Id === id ? { ...cus, [field]: value } : cus
             )
         );
-        //setUpdatedFields((prevFields) => ({ ...prevFields, [id]: true }));
+        setUpdatedFields((prevFields) => ({ ...prevFields, [id]: true }));
+
+        // Update the originalCusList with the updated customer info
+        setOriginalCusList((prevList) =>
+            prevList.map((cus) =>
+                cus.Id === id ? { ...cus, [field]: value } : cus
+            )
+        );
     };
+
+
     // Change the current page
     const handleChangePage = (newPage) => {
         setPage(newPage);
@@ -193,7 +210,8 @@ function AccountCustomer() {
                                                     onChange={(event) => handleInputChange(request.Id, "Address", event.target.value)} />
                                             </td>
                                             <td>
-                                            <button className="btn-save" onClick={() => { handleSubmit(request.Id)}}>Save</button>                                                <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
+                                                <button className="btn-save" onClick={() => { handleSubmit(request.Id) }}>Save</button>
+                                                <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
                                             </td>
                                         </tr></>
                                     ))}
