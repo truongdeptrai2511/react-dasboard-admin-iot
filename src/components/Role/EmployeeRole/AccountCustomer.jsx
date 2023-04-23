@@ -40,11 +40,6 @@ function AccountCustomer() {
                 },
             });
             const data = response.data;
-            console.log(data);
-            const filteredData = data.filter(element => element.CitizenIdentification === null);
-            console.log(filteredData);
-            setPagination(calculateRange(filteredData, 5));
-            setCusList(sliceData(filteredData, page, 5));
         } catch (error) {
             setError(error.message);
         }
