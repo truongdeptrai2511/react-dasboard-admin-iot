@@ -18,15 +18,33 @@
 
     .account-cus-body {
         .cus-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 95%;
-
-            input:focus {
-                outline: none;
-            }
         }
     }
+    .input-info {display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 95%;
+    font-style: inherit;
+    font-variant: inherit;
+    font-weight: inherit;
+    font-stretch: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    margin: 0px;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    letter-spacing: 0.035em;
+    opacity: 1;
+    text-transform: none;
+    vertical-align: unset;
+    text-decoration: none;
+    color: gray;
+    font-weight: 700;
 }
+    
+    input:focus {
+        outline: none;
+    }
+}
+

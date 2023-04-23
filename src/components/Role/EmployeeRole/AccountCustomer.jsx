@@ -45,9 +45,6 @@ function AccountCustomer() {
         }
     };
 
-
-
-
     // Delete an cus from the list
     const handleDelete = (id) => {
         $.ajax({
@@ -62,7 +59,6 @@ function AccountCustomer() {
             }
         });
     };
-
 
     // Search for employees
     const handleSearch = (event) => {
