@@ -20,7 +20,6 @@ function SuppliersMng() {
                 },
             });
             store.dispatch({ type: 'SET_SUPPLIST', payload: response.data.Result });
-            console.log(store);
             setLoading(false);
         } catch (error) {
             store.dispatch({ type: 'SET_ERROR', payload: error.message });
@@ -54,13 +53,15 @@ function SuppliersMng() {
                     supplier.SupplierPhoneNumber.toLowerCase().includes(state.search.toLowerCase())
             );
             store.dispatch({ type: 'SET_SUPPLIST', payload: searchResults });
-        } else {
+        } else if (event.target.value === '') {
+            refreshSuppList()    // refresh supp list when search is empty
+        } else
             store.dispatch({ type: 'SET_SUPPLIST', payload: state.refreshDataSupp });
-        }
     };
 
     // Delete Supplier
     const handleDelete = (id) => {
+        console.log(id);
         $.ajax({
             url: `https://localhost:7199/api/supplier/${id}`,
             type: 'DELETE',
@@ -68,11 +69,16 @@ function SuppliersMng() {
                 Authorization: localStorage.getItem('token'),
             },
             success: function () {
+                const updatedSuppList = state.suppList.filter(
+                    (supplier) => supplier.Id !== id
+                    
+                );
                 store.dispatch({
                     type: 'SET_SUPPLIST',
-                    payload: state
-                        .suppList.filter((supplier) => supplier.SupplierId !== id),
+                    payload: updatedSuppList
                 });
+                store.dispatch({ type: 'SET_REFRESHDATA', payload: updatedSuppList });
+                console.log(state.suppList);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 store.dispatch({ type: 'SET_ERROR', payload: thrownError });
@@ -92,54 +98,69 @@ function SuppliersMng() {
     }, []);
 
     return (
-        <Provider store={store}>
-            <div className="suppliers-mng">
-                {loading ? (
-                    <div>Loading...</div>
-                ) : (
-                    <>
-                        <div className="search-container">
-                            <input
-                                type="text"
-                                placeholder="Search supplier"
-                                value={state.search}
-                                onChange={handleSearch}
-                            />
-                        </div>
-                        <table>
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Fax</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
+        <div className='sup-container'>
+            <Provider store={store}>
+                <div className="suppliers-mng">
+                    {loading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <>
+                            <div className="supp-header">
+                                <h1 style={{ marginTop: "-0.05em" }}>Suppliers</h1>
+                                <input
+                                    type="text"
+                                    placeholder="Search supplier"
+                                    value={state.search}
+                                    onChange={handleSearch}
+                                    style={{
+                                        width: '50%',
+                                        height: '30px',
+                                        borderRadius: '5px',
+                                        border: '1px solid #ccc',
+                                        padding: '10px',
+                                        fontSize: '16px',
+                                        outline: 'none',
+                                        marginBottom: '20px'
+
+                                    }}
+                                />
+                            </div>
+                            <table>
+
                                 <tbody>
-                                {state.suppList && state.suppList.map((supplier) => (
-                                    <tr key={supplier.SupplierId}>
-                                        <td>{supplier.SupplierId}</td>
-                                        <td>{supplier.SupplierName}</td>
-                                        <td>{supplier.SupplierEmail}</td>
-                                        <td>{supplier.SupplierPhoneNumber}</td>
-                                        <td>{supplier.SupplierFax}</td>
-                                        <td>
-                                            <button className='btn-del' onClick={() => handleDelete(supplier.SupplierId)}>x</button>
-                                        </td>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Fax</th>
+                                        <th>Action</th>
                                     </tr>
-                                ))}
+
+
+                                    {state.suppList && state.suppList.map((supplier) => (
+                                        <tr key={supplier.Id}>
+                                            <td>{supplier.Id}</td>
+                                            <td>{supplier.SupplierName}</td>
+                                            <td>{supplier.SupplierEmail}</td>
+                                            <td>{supplier.SupplierPhoneNumber}</td>
+                                            <td>{supplier.SupplierFax}</td>
+                                            <td>
+                                                <button className='btn-del' onClick={() => handleDelete(supplier.Id)}>x</button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
-                                
-                        </table>
-                                <div className="refresh-container">
-                            <button onClick={refreshSuppList}>Refresh</button>
-                        </div>
-                    </>
-                )}
-            </div>
-        </Provider>
+
+                            </table>
+                            <div className="refresh-container">
+                                <button onClick={refreshSuppList}>Refresh</button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </Provider>
+        </div>
     );
 }
 

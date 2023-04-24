@@ -1,4 +1,3 @@
-import { createStore } from "redux";
 
 const initialState = {
     suppList: [],
@@ -6,8 +5,6 @@ const initialState = {
     refreshDataSupp: [],
     error: '',
 };
-
-const store = createStore(reducer);
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -25,6 +22,7 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 refreshDataSupp: action.payload,
+                suppList: action.payload, // update suppList when refreshDataSupp is set
             };
         case 'SET_ERROR':
             return {
@@ -35,5 +33,7 @@ const reducer = (state = initialState, action) => {
             return state;
     }
 };
+
+console.log(reducer);
 
 export default reducer;
