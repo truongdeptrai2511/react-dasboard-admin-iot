@@ -4,12 +4,13 @@ import $, { event } from 'jquery';
 import './styles.scss';
 import { Provider } from 'react-redux';
 import store from '../../../Redux/store';
+import GetJwtTokenClaim from '../../../utils/JwtTokenClaim';
 
 
 function SuppliersMng() {
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(store.getState());
-
+    const loadToken = GetJwtTokenClaim();
     // Get all supp list
     const getSuppList = async () => {
         try {
@@ -87,35 +88,35 @@ function SuppliersMng() {
         });
     };
 
-    const handleSubmit = (Id) => {
-        try {
-            const url = `https://localhost:7199/api/supplier/${Id}`;
-            const response = axios.put(url, {
-                headers: {
-                    Authorization: localStorage.getItem('token'),
-                }
-            })
-            const updateData = state.suppList.map((supplier) => {
-                if (supplier.Id === Id) {
-                    return { ...supplier, ...response.data.Result };
-                }
-                return supplier;
-            });
-            store.dispatch({ type: 'SET_SUPPLIST', payload: updateData });
-        }
-        catch (error) {
-            store.dispatch({ type: 'SET_ERROR', payload: error.message });
-        }
-    }
+    // Update Supplier
 
     // Follow Change input
-    const handleChangeInput = (id, field, value) => {
+    const handleChangeInput = async (id, field, value) => {
         console.log(id, field, value);
         const updatedSuppList = state.suppList.map((supplier) =>
             supplier.Id === id ? { ...supplier, [field]: value } : supplier
         );
-        store.dispatch({ type: 'SET_SUPPLIST', payload: updatedSuppList });
-        handleSubmit(id);
+        store.dispatch({ type: "SET_SUPPLIST", payload: updatedSuppList });
+        try {
+            const url = `https://localhost:7199/api/supplier/${id}`;
+            const response = await axios.put(
+                url,
+                updatedSuppList.find((supplier) => supplier.Id === id),
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                }
+            );
+            console.log(response.status);
+            console.log(response);
+            const updateData = state.suppList.map((supplier) =>
+                supplier.Id === id ? { ...supplier, ...response.data.Result } : supplier
+            );
+            store.dispatch({ type: "SET_SUPPLIST", payload: updateData });
+        } catch (error) {
+            store.dispatch({ type: "SET_ERROR", payload: error.message.response });
+        }
     };
 
 
@@ -176,38 +177,38 @@ function SuppliersMng() {
                                             <td>
                                                 <input
                                                     className='input-info'
-                                                    type='text' 
+                                                    type='text'
                                                     value={supplier.Id}
                                                     style={{ width: "50px" }}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'Id', event.target.value )} />
+                                                    onChange={(event) => handleChangeInput(supplier.Id, 'Id', event.target.value)} />
                                             </td>
                                             <td>
                                                 <input
                                                     className='input-info'
-                                                    type='text' 
+                                                    type='text'
                                                     value={supplier.SupplierName}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierName', event.target.value )} />
+                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierName', event.target.value)} />
                                             </td>
                                             <td>
                                                 <input
                                                     className='input-info'
-                                                    type='text' 
+                                                    type='text'
                                                     value={supplier.SupplierEmail}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierEmail', event.target.value )} />
+                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierEmail', event.target.value)} />
                                             </td>
                                             <td>
                                                 <input
                                                     className='input-info'
-                                                    type='text' 
+                                                    type='text'
                                                     value={supplier.SupplierPhoneNumber}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierPhoneNumber', event.target.value )} />
+                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierPhoneNumber', event.target.value)} />
                                             </td>
                                             <td>
                                                 <input
                                                     className='input-info'
-                                                    type='text' 
+                                                    type='text'
                                                     value={supplier.SupplierFax}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierFax', event.target.value )} />
+                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierFax', event.target.value)} />
                                             </td>
                                             <td>
                                                 <button className='btn-del' onClick={() => handleDelete(supplier.Id)}>x</button>

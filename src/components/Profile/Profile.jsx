@@ -7,7 +7,6 @@ function Profile () {
     const [isLogin, setIsLogin] = useState(false);
     const [showChangePassword, setShowChangePassword] = useState(false);
     const payload = JwtTokenClaim();
-    console.log(payload);
     useEffect(() => {
         if (localStorage.getItem('token')) {
             console.log(localStorage.getItem('token'));
