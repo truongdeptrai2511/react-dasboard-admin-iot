@@ -4,6 +4,7 @@ const initialState = {
     search: '',
     refreshDataSupp: [],
     error: '',
+    typeInput: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,6 +18,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 search: action.payload,
+            };
+        case 'SET_CHANGE_INPUT':
+            return {
+                ...state,  
+                typeInput: action.payload,
             };
         case 'SET_REFRESHDATA':
             return {
