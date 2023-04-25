@@ -12,7 +12,7 @@ function SuppliersMng() {
     const [state, setState] = useState(store.getState());
     const loadToken = GetJwtTokenClaim();
     const [pageNumber, setPageNumber] = useState(0);
-    const itemsPerPage = 10; // số mục trên mỗi trang
+    const itemsPerPage = 5; // số mục trên mỗi trang
     const pageCount = Math.ceil(state.suppList.length / itemsPerPage); // tổng số trang
 
     // Get all supp list
@@ -172,6 +172,7 @@ function SuppliersMng() {
 
                                     }}
                                 />
+                                <button className="btn-refresh" onClick={refreshSuppList}>Refresh</button>
                             </div>
                             <table>
 
@@ -234,17 +235,14 @@ function SuppliersMng() {
 
                             </table>
                             <ReactPaginate
-                                previousLabel={'previous'}
-                                nextLabel={'next'}
+                                previousLabel={'<'}
+                                nextLabel={'>'}
                                 pageCount={pageCount}
                                 onPageChange={handlePageClick}
                                 containerClassName={'pagination'}
                                 activeClassName={'active'}
                             />
 
-                            <div className="refresh-container">
-                                <button onClick={refreshSuppList}>Refresh</button>
-                            </div>
                         </>
                     )}
                 </div>

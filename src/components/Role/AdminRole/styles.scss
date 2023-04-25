@@ -72,7 +72,7 @@
         justify-content: center;
         list-style: none;
         padding: 0;
-        margin: 20px 0;
+        margin: 50px 0;
       }
       
       .pagination li {
@@ -92,6 +92,22 @@
       }
     .pagination:hover {
         cursor: pointer;
+    }
+    .btn-refresh{
+        height: 50px;
+        width: 80px;
+        float: left;
+        background-color: #2D83B5;
+        padding: 10px;
+        border-radius: 10px;
+        border: 0.2px solid;
+        border-color: #7db1ff;
+        color: white;
+
+    }
+    .btn-refresh:hover{
+        background-color: white;
+        color: #2D83B5;
     }
       
 }
