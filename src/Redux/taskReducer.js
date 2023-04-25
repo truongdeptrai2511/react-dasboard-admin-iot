@@ -5,6 +5,8 @@ const initialState = {
     refreshDataSupp: [],
     error: '',
     typeInput: [],
+    currentPage: 1,
+    itemsPerPage: 5
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,7 +23,7 @@ const reducer = (state = initialState, action) => {
             };
         case 'SET_CHANGE_INPUT':
             return {
-                ...state,  
+                ...state,
                 typeInput: action.payload,
             };
         case 'SET_REFRESHDATA':
@@ -39,7 +41,5 @@ const reducer = (state = initialState, action) => {
             return state;
     }
 };
-
-console.log(reducer);
 
 export default reducer;

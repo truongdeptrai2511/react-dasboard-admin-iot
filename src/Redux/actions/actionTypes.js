@@ -1,19 +1,18 @@
-export const ADD_TASK = 'ADD_TASK';
-export const UPDATE_TASK = 'UPDATE_TASK';
-export const DELETE_TASK = 'DELETE_TASK';
-export const addTask = (task) => ({
-    type: ADD_TASK,
-    payload: task,
-  });
-  
-  export const updateTask = (id, task) => ({
-    type: UPDATE_TASK,
-    payload: { id, task },
-  });
-  
-  export const deleteTask = (id) => ({
-    type: DELETE_TASK,
-    payload: id,
-  });
+export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
+export const SET_ITEMS_PER_PAGE = "SET_ITEMS_PER_PAGE";
+export const SET_TOTAL_ITEMS = "SET_TOTAL_ITEMS";
 
-  
+export const setCurrentPage = (page) => ({
+  type: SET_CURRENT_PAGE,
+  payload: page,
+});
+
+export const setItemsPerPage = (itemsPerPage) => ({
+  type: SET_ITEMS_PER_PAGE,
+  payload: itemsPerPage,
+});
+
+export const setTotalItems = (totalItems) => ({
+  type: SET_TOTAL_ITEMS,
+  payload: totalItems,
+});

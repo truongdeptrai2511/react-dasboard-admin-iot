@@ -2,15 +2,19 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import $, { event } from 'jquery';
 import './styles.scss';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import store from '../../../Redux/store';
 import GetJwtTokenClaim from '../../../utils/JwtTokenClaim';
-
+import ReactPaginate from 'react-paginate';
 
 function SuppliersMng() {
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(store.getState());
     const loadToken = GetJwtTokenClaim();
+    const [pageNumber, setPageNumber] = useState(0);
+    const itemsPerPage = 10; // số mục trên mỗi trang
+    const pageCount = Math.ceil(state.suppList.length / itemsPerPage); // tổng số trang
+
     // Get all supp list
     const getSuppList = async () => {
         try {
@@ -119,6 +123,16 @@ function SuppliersMng() {
         }
     };
 
+    // Pagination
+    const handlePageClick = ({ selected }) => {
+        setPageNumber(selected);
+    };
+
+    const displayedSuppList = state.suppList.slice(
+        pageNumber * itemsPerPage,
+        (pageNumber + 1) * itemsPerPage
+    );
+
 
     useEffect(() => {
         getSuppList();
@@ -172,52 +186,62 @@ function SuppliersMng() {
                                     </tr>
 
 
-                                    {Array.isArray(state.suppList) && state.suppList.map((supplier) => (
-                                        <tr key={supplier.Id}>
-                                            <td>
-                                                <input
-                                                    className='input-info'
-                                                    type='text'
-                                                    value={supplier.Id}
-                                                    style={{ width: "50px" }}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'Id', event.target.value)} />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    className='input-info'
-                                                    type='text'
-                                                    value={supplier.SupplierName}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierName', event.target.value)} />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    className='input-info'
-                                                    type='text'
-                                                    value={supplier.SupplierEmail}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierEmail', event.target.value)} />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    className='input-info'
-                                                    type='text'
-                                                    value={supplier.SupplierPhoneNumber}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierPhoneNumber', event.target.value)} />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    className='input-info'
-                                                    type='text'
-                                                    value={supplier.SupplierFax}
-                                                    onChange={(event) => handleChangeInput(supplier.Id, 'SupplierFax', event.target.value)} />
-                                            </td>
-                                            <td>
-                                                <button className='btn-del' onClick={() => handleDelete(supplier.Id)}>x</button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {Array.isArray(displayedSuppList) &&
+                                        displayedSuppList.map((supplier) => (
+                                            <tr key={supplier.Id}>
+                                                <td>
+                                                    <input
+                                                        className='input-info'
+                                                        type='text'
+                                                        value={supplier.Id}
+                                                        style={{ width: "50px" }}
+                                                        onChange={(event) => handleChangeInput(supplier.Id, 'Id', event.target.value)} />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        className='input-info'
+                                                        type='text'
+                                                        value={supplier.SupplierName}
+                                                        onChange={(event) => handleChangeInput(supplier.Id, 'SupplierName', event.target.value)} />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        className='input-info'
+                                                        type='text'
+                                                        value={supplier.SupplierEmail}
+                                                        onChange={(event) => handleChangeInput(supplier.Id, 'SupplierEmail', event.target.value)} />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        className='input-info'
+                                                        type='text'
+                                                        value={supplier.SupplierPhoneNumber}
+                                                        onChange={(event) => handleChangeInput(supplier.Id, 'SupplierPhoneNumber', event.target.value)} />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        className='input-info'
+                                                        type='text'
+                                                        value={supplier.SupplierFax}
+                                                        onChange={(event) => handleChangeInput(supplier.Id, 'SupplierFax', event.target.value)} />
+                                                </td>
+                                                <td>
+                                                    <button className='btn-del' onClick={() => handleDelete(supplier.Id)}>x</button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
 
                             </table>
+                            <ReactPaginate
+                                previousLabel={'previous'}
+                                nextLabel={'next'}
+                                pageCount={pageCount}
+                                onPageChange={handlePageClick}
+                                containerClassName={'pagination'}
+                                activeClassName={'active'}
+                            />
+
                             <div className="refresh-container">
                                 <button onClick={refreshSuppList}>Refresh</button>
                             </div>

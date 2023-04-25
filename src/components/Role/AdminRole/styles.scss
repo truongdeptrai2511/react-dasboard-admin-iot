@@ -67,4 +67,31 @@
     input:focus {
         outline: none;
     }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+      }
+      
+      .pagination li {
+        margin: 0 10px;
+      }
+      
+      .pagination li a {
+        color: #2D83B5;
+        text-decoration: none;
+      }
+      
+      .pagination li.active a {
+        color: #fff;
+        background-color: #2D83B5;
+        border-radius: 4px;
+        padding: 5px 10px;
+      }
+    .pagination:hover {
+        cursor: pointer;
+    }
+      
 }
