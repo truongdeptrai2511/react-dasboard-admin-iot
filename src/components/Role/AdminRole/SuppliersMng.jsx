@@ -6,7 +6,8 @@ import { Provider, useDispatch } from 'react-redux';
 import store from '../../../Redux/store';
 import GetJwtTokenClaim from '../../../utils/JwtTokenClaim';
 import ReactPaginate from 'react-paginate';
-
+import Modal from 'react-modal';
+import { CSSTransition } from 'react-transition-group';
 function SuppliersMng() {
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(store.getState());
@@ -14,7 +15,8 @@ function SuppliersMng() {
     const [pageNumber, setPageNumber] = useState(0);
     const itemsPerPage = 5; // số mục trên mỗi trang
     const pageCount = Math.ceil(state.suppList.length / itemsPerPage); // tổng số trang
-
+    const [openModalAdd, setOpenModalAdd] = useState(false);
+    const toggleModal = () => setOpenModalAdd(!openModalAdd);
     // Get all supp list
     const getSuppList = async () => {
         try {
@@ -46,6 +48,11 @@ function SuppliersMng() {
             store.dispatch({ type: 'SET_ERROR', payload: error.message });
         }
     };
+
+    // Add Supplier
+    const handleAdd = () => {
+
+    }
 
     // Search for supp list
     const handleSearch = (event) => {
@@ -91,8 +98,6 @@ function SuppliersMng() {
             },
         });
     };
-
-    // Update Supplier
 
     // Follow Change input
     const handleChangeInput = async (id, field, value) => {
@@ -172,6 +177,36 @@ function SuppliersMng() {
 
                                     }}
                                 />
+                                <span>
+                                    <button onClick={toggleModal} className='btn-refresh'>Add</button>
+                                    <CSSTransition
+                                        in={openModalAdd}
+                                        timeout={300}
+                                        classNames="modal"
+                                        unmountOnExit
+                                    >
+                                        <Modal
+                                            isOpen={openModalAdd}
+                                            onRequestClose={toggleModal}
+                                            
+                                            style={
+                                                {
+                                                    content: {
+                                                        top: '50%',
+                                                        left: '50%',
+                                                        right: 'auto',
+                                                        bottom: 'auto',
+                                                        marginRight: '-50%',
+                                                        transform: 'translate(-50%, -50%)'
+                                                    }
+                                                }
+                                            }
+                                        >
+                                            <h2>Modal Content</h2>
+                                            <button onClick={toggleModal}>Close Modal</button>
+                                        </Modal>
+                                    </CSSTransition>
+                                </span>
                                 <button className="btn-refresh" onClick={refreshSuppList}>Refresh</button>
                             </div>
                             <table>

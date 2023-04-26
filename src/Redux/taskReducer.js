@@ -5,8 +5,8 @@ const initialState = {
     refreshDataSupp: [],
     error: '',
     typeInput: [],
-    currentPage: 1,
-    itemsPerPage: 5
+    cateList: [],
+    refreshDataCate: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +37,18 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 error: action.payload,
             };
+        // Category
+        case 'SET_CATE_LIST':
+            return {
+                ...state,
+                cateList: action.payload
+            };
+        case 'SET_CATE_REfRESHDATA':
+            return {
+                ...state,
+                refreshDataCate: action.payload,
+                cateList: action.payload
+            }
         default:
             return state;
     }

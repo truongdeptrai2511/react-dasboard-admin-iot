@@ -22,8 +22,8 @@ function getSidebarMenu(role) {
         {
           id: 3,
           icon: ShippingIcon,
-          path: '/products',
-          title: 'Products',
+          path: '/category',
+          title: 'Category',
         },
         {
           id: 4,
