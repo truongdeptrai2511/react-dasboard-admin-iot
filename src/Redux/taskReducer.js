@@ -37,6 +37,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 error: action.payload,
             };
+        case 'SET_SUPP_ADD':
+            const updatedSuppList = [...state.suppList, action.payload];
+            return {
+                ...state,
+                suppList: updatedSuppList,
+            };
         // Category
         case 'SET_CATE_LIST':
             return {

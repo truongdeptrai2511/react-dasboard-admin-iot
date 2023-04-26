@@ -50,8 +50,34 @@ function SuppliersMng() {
     };
 
     // Add Supplier
-    const handleAdd = () => {
-
+    const handleAdd =async () => {
+        try {
+            const url = 'https://localhost:7199/api/supplier';
+            const response = await axios.post(
+                url,
+                {
+                    [field]: value,
+                },
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token'),
+                    }
+                }
+            );
+            const updatedSupplier = response.data.Result;
+            const updatedSuppList = state.suppList.map((supplier) => {
+                if (supplier.Id !== updatedSupplier.Id) {
+                    return { ...supplier };
+                } else {
+                    return { ...supplier, ...updatedSupplier };
+                }
+            });
+            console.log(updatedSupplier);
+            store.dispatch({ type: 'SET_SUPP_ADD', payload: updatedSupplier });
+            store.dispatch({ type: 'SET_SUPPLIST', payload: updatedSuppList });
+        } catch (error) {
+            store.dispatch({ type: 'SET_ERROR', payload: error.message.response });
+        }
     }
 
     // Search for supp list
@@ -128,6 +154,15 @@ function SuppliersMng() {
         }
     };
 
+    // Add Supplier
+    const handleChangeAdd = async (event) => {
+        const { name, value } = event.target;
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
     // Pagination
     const handlePageClick = ({ selected }) => {
         setPageNumber(selected);
@@ -188,7 +223,7 @@ function SuppliersMng() {
                                         <Modal
                                             isOpen={openModalAdd}
                                             onRequestClose={toggleModal}
-                                            
+
                                             style={
                                                 {
                                                     content: {
@@ -197,13 +232,134 @@ function SuppliersMng() {
                                                         right: 'auto',
                                                         bottom: 'auto',
                                                         marginRight: '-50%',
-                                                        transform: 'translate(-50%, -50%)'
+                                                        transform: 'translate(-50%, -50%)',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        width: '500px',
+                                                        backgroundImage: 'linear-gradient(#2D83B5, #2D83B5, #89CCF6)',
+                                                        backdropFilter: 'blur(100px)',
                                                     }
                                                 }
                                             }
                                         >
-                                            <h2>Modal Content</h2>
-                                            <button onClick={toggleModal}>Close Modal</button>
+                                            <button
+                                                onClick={toggleModal}
+                                                style={
+                                                    {
+                                                        border: 'none',
+                                                        width: '20px',
+                                                        height: '20px',
+                                                        backgroundColor: 'transparent',
+                                                        position: 'absolute',
+                                                        right: '10px',
+                                                        top: '10px',
+                                                        color: 'white',
+
+                                                    }}
+                                            >x
+                                            </button>
+                                            <h2 style={{ color: 'white' }}>Add Supplier</h2>
+                                            <div className='modal-body'
+                                                style={{
+                                                }}
+                                            >
+                                                <span>
+                                                    <label>Name</label>
+                                                    <input
+                                                        style={{
+                                                            width: '95%',
+                                                            height: '30px',
+                                                            borderRadius: '5px',
+                                                            border: '1px solid #ccc',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            outline: 'none',
+                                                            marginBottom: '20px',
+                                                            display: 'block',
+                                                            marginTop: '10px'
+
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Supplier Name"
+                                                        onChange={handleChangeAdd}
+                                                    />
+                                                </span>
+                                                <span>
+                                                    <label>Email</label>
+                                                    <input
+                                                        style={{
+                                                            width: '95%',
+                                                            height: '30px',
+                                                            borderRadius: '5px',
+                                                            border: '1px solid #ccc',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            outline: 'none',
+                                                            marginBottom: '20px',
+                                                            display: 'block',
+                                                            marginTop: '10px'
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Supplier Email"
+                                                        onChange={handleChangeAdd}
+                                                    />
+                                                </span>
+                                                <span>
+                                                    <label>Phone Number</label>
+                                                    <input
+                                                        style={{
+                                                            width: '95%',
+                                                            height: '30px',
+                                                            borderRadius: '5px',
+                                                            border: '1px solid #ccc',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            outline: 'none',
+                                                            marginBottom: '20px',
+                                                            display: 'block',
+                                                            marginTop: '10px'
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Supplier Phone Number"
+                                                        onChange={handleChangeAdd}
+                                                    />
+                                                </span>
+                                                <span>
+                                                    <label>Fax</label>
+                                                    <input
+                                                        style={{
+                                                            width: '95%',
+                                                            height: '30px',
+                                                            borderRadius: '5px',
+                                                            border: '1px solid #ccc',
+                                                            padding: '10px',
+                                                            fontSize: '16px',
+                                                            outline: 'none',
+                                                            marginBottom: '20px',
+                                                            display: 'block',
+                                                            marginTop: '10px'
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Supplier Fax"
+                                                        onChange={handleChangeAdd}
+                                                    />
+                                                </span>
+                                                <button className='btn-add' style={{
+                                                    width: '10%',
+                                                    height: '30px',
+                                                    borderRadius: '5px',
+                                                    border: '1px solid #ccc',
+                                                    fontSize: '16px',
+                                                    outline: 'none',
+                                                    margin: '0 auto',
+                                                    backgroundColor: 'white',
+                                                }}
+                                                    onClick={handleAdd}
+                                                >
+                                                    Add
+                                                </button>
+                                            </div>
+
                                         </Modal>
                                     </CSSTransition>
                                 </span>
