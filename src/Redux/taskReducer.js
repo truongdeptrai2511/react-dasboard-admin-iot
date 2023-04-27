@@ -7,6 +7,7 @@ const initialState = {
     typeInput: [],
     cateList: [],
     refreshDataCate: [],
+    searchCate: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -55,6 +56,17 @@ const reducer = (state = initialState, action) => {
                 refreshDataCate: action.payload,
                 cateList: action.payload
             }
+        case 'SET_CATE_SEARCH':
+            return {
+                ...state,
+                searchCate: action.payload
+            }
+        case 'SET_CATE_ADD':
+            const updateCateList = [...state.cateList, action.payload];
+            return {
+                ...state,
+                suppList: updateCateList,
+            };
         default:
             return state;
     }

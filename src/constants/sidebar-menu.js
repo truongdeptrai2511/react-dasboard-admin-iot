@@ -15,21 +15,21 @@ function getSidebarMenu(role) {
         },
         {
           id: 2,
+          icon: UserIcon,
+          path: '/profile',
+          title: 'My account',
+        },
+        {
+          id: 3,
           icon: ProductIcon,
           path: '/orders',
           title: 'Orders',
         },
         {
-          id: 3,
+          id: 4,
           icon: ShippingIcon,
           path: '/category',
           title: 'Category',
-        },
-        {
-          id: 4,
-          icon: UserIcon,
-          path: '/profile',
-          title: 'My account',
         },
         {
           id: 5,

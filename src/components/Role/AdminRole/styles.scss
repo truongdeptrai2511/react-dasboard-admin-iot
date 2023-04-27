@@ -125,6 +125,38 @@
     border-radius: 10px;
     padding: 1em;
     gap: 25px;
+
+    .cate-container-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .cate-container-header-search {
+            display: flex;
+            gap: 1em;
+            width: 100%;
+            height: max-content;
+
+
+            .btn-refresh {
+                height: 50px;
+                width: 80px;
+                float: right;
+                background-color: #2D83B5;
+                padding: 10px;
+                border-radius: 10px;
+                border: 0.2px solid;
+                border-color: #7db1ff;
+                color: white;
+
+            }
+
+            .btn-refresh:hover {
+                background-color: white;
+                color: #2D83B5;
+            }
+        }
+    }
 }
 
 .pagination {
