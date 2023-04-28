@@ -48,3 +48,36 @@
     }
 }
 
+// Product
+.prod-container {
+    width: 94%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 1em;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 1em;
+    gap: 25px;
+
+    .product-mng{
+        .product-header{
+            display: flex;
+            h1{
+
+                width: 10%;
+            }
+            .product-item-bd{
+                display: flex;
+                width: 50%;
+                justify-content: center;
+                align-items: center;
+            }
+            .product-item-btm{
+                float: right;
+                display: inline;
+            }
+        }
+    }
+}

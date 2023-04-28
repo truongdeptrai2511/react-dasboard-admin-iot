@@ -15,6 +15,7 @@ import RegisterEmployee from './components/Role/AdminRole/RegisterEmployee/Regis
 import ManageEmployee from './components/Role/AdminRole/RegisterEmployee/ManageEmployee';
 import SuppliersMng from './components/Role/AdminRole/SuppliersMng';
 import CategoryMng from './components/Role/AdminRole/CategoryMng';
+import ProductsMng from './components/Role/EmployeeRole/Products';
 
 function App() {
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -55,6 +56,7 @@ function App() {
             <Route exact path="/manageremployee" element={<ManageEmployee/>}/>
             <Route exact path='/suppliers' element={<SuppliersMng/>} />
             <Route exact path='/category' element={<CategoryMng/>} />
+            <Route exact path="products" element={<ProductsMng />} />
           </Routes>
         </div>
         <div className="sidebar-footer">

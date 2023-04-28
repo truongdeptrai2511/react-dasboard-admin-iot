@@ -42,13 +42,7 @@ function getSidebarMenu(role) {
           icon: UserIcon,
           path: '/manageremployee',
           title: 'Manage Employee',
-        },
-        {
-          id: 7,
-          icon: warehouseicon,
-          path: '/suppliers',
-          title: 'Suppliers',
-        },
+        }        
       ]
     }
     if (role === "customer") {
@@ -107,7 +101,7 @@ function getSidebarMenu(role) {
           icon: UserIcon,
           path: '/profile',
           title: 'My account',
-        },
+        }
       ]
     }
     else{

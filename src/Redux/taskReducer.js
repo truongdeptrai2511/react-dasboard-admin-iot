@@ -8,6 +8,8 @@ const initialState = {
     cateList: [],
     refreshDataCate: [],
     searchCate: '',
+    productList: [],
+    refreshDataProduct: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -67,6 +69,18 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 suppList: updateCateList,
             };
+        //Product
+        case 'SET_PRODUCTLIST':
+            return {
+                ...state,
+                productList: action.payload
+            }
+        case 'SET_REfRESHDATA_PRODUCT':
+            return {
+                ...state,
+                refreshDataProduct: action.payload,
+                productList: action.payload
+            }
         default:
             return state;
     }
