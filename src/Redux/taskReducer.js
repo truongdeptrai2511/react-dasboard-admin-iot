@@ -10,6 +10,8 @@ const initialState = {
     searchCate: '',
     productList: [],
     refreshDataProduct: [],
+    searchProduct: '',
+    suppIdList: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -75,11 +77,27 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 productList: action.payload
             }
-        case 'SET_REfRESHDATA_PRODUCT':
+        case 'SET_REFRESHDATA_PRODUCT':
             return {
                 ...state,
                 refreshDataProduct: action.payload,
                 productList: action.payload
+            }
+        case 'SET_SEARCH_PRODUCT':
+            return {
+                ...state,
+                searchProduct: action.payload
+            }
+        case 'SET_PRODUCT_ADD':
+            const updateProductList = [...state.productList, action.payload];
+            return {
+                ...state,
+                productList: updateProductList,
+            };
+        case 'SET_SUPP_ID' :
+            return {
+                ...state,
+                suppIdList: action.payload
             }
         default:
             return state;

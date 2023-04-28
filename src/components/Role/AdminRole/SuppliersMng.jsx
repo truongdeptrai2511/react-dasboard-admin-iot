@@ -165,8 +165,6 @@ function SuppliersMng({ show, onHide }) {
                     },
                 }
             );
-            console.log(response.status);
-            console.log(response);
             const updateData = state.suppList.map((supplier) =>
                 supplier.Id === id ? { ...supplier, ...response.data.Result } : supplier
             );
