@@ -21,24 +21,18 @@ function getSidebarMenu(role) {
         },
         {
           id: 3,
-          icon: ProductIcon,
-          path: '/orders',
-          title: 'Orders',
-        },
-        {
-          id: 4,
           icon: ShippingIcon,
           path: '/category',
           title: 'Category',
         },
         {
-          id: 5,
+          id: 4,
           icon: UserIcon,
           path: '/registeremployee',
           title: 'Register Employee',
         },
         {
-          id: 6,
+          id: 5,
           icon: UserIcon,
           path: '/manageremployee',
           title: 'Manage Employee',
@@ -91,13 +85,6 @@ function getSidebarMenu(role) {
         },
         {
           id: 3,
-          icon: ProductIcon,
-          path: '/orders',
-          title: 'Orders',
-          //Quan ly don hang
-        },
-        {
-          id: 4,
           icon: UserIcon,
           path: '/profile',
           title: 'My account',
