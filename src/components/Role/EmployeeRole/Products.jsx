@@ -67,7 +67,8 @@ function ProductsMng(show, onHide) {
     //Modal
     const uploadImage = async (file) => {
         const storageRef = storage.ref();
-        const fileRef = storageRef.child(file.name);
+        const imagesRef = storageRef.child('images');
+        const fileRef = imagesRef.child(file.name);
         await fileRef.put(file);
         const url = await fileRef.getDownloadURL();
         return url;
@@ -77,7 +78,7 @@ function ProductsMng(show, onHide) {
         const url = await uploadImage(file); // Chờ đợi promise được giải quyết
         setFile(file);
         setData({ ...data, imgName: url });
-      };      
+    };
     const getCateList = async () => {
         try {
             const url = 'https://localhost:7199/api/Category';
