@@ -7,6 +7,26 @@ import store from "../../../Redux/store";
 import ReactPaginate from 'react-paginate';
 import Modal from 'react-modal';
 import { Alert } from 'react-bootstrap';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyDYuiiMfULtEke9a2C19lJCBV-t3w8h4Mg",
+    authDomain: "iot-store-image-cloud.firebaseapp.com",
+    projectId: "iot-store-image-cloud",
+    storageBucket: "iot-store-image-cloud.appspot.com",
+    messagingSenderId: "403557199488",
+    appId: "1:403557199488:web:dfc190ac20357dc453c065",
+    measurementId: "G-XDEVPE7GNN"
+};
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
 
 function ProductsMng(show, onHide) {
     const [loading, setLoading] = useState(true);
@@ -16,6 +36,7 @@ function ProductsMng(show, onHide) {
     const pageCount = Math.ceil(state.productList.length / itemsPerPage); // tổng số trang
     const [openModalAdd, setOpenModalAdd] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [file, setFile] = useState();
     const [data, setData] = useState({
         productName: "",
         code: "",
@@ -44,6 +65,19 @@ function ProductsMng(show, onHide) {
         }
     }
     //Modal
+    const uploadImage = async (file) => {
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(file.name);
+        await fileRef.put(file);
+        const url = await fileRef.getDownloadURL();
+        return url;
+    };
+    const handleChangeImage = async (event) => {
+        const file = event.target.files[0];
+        const url = await uploadImage(file); // Chờ đợi promise được giải quyết
+        setFile(file);
+        setData({ ...data, imgName: url });
+      };      
     const getCateList = async () => {
         try {
             const url = 'https://localhost:7199/api/Category';
@@ -131,6 +165,7 @@ function ProductsMng(show, onHide) {
     const handleChangeAdd = ({ target: { name, value } }) => {
         setData({ ...data, [name]: value });
     }
+
     // Refresh product list
     const refreshProductList = async () => {
         try {
@@ -320,9 +355,6 @@ function ProductsMng(show, onHide) {
                                     </button>
                                     <h2 style={{ color: 'white' }}>Add product</h2>
                                     <div className='modal-body'>
-                                        <span>
-                                            <label>Name</label>
-                                        </span>
                                         <input
                                             style={{
                                                 width: '95%',
@@ -338,83 +370,75 @@ function ProductsMng(show, onHide) {
 
                                             }}
                                             type="text"
-                                            placeholder="product Name"
+                                            placeholder="Product Name"
                                             name="productName"
                                             value={data.productName}
                                             onChange={handleChangeAdd}
                                         />
-                                        <span>
-                                            <label>Code</label>
-                                        </span>
-                                        <input
-                                            style={{
-                                                width: '95%',
-                                                height: '30px',
-                                                borderRadius: '5px',
-                                                border: '1px solid #ccc',
-                                                padding: '10px',
-                                                fontSize: '16px',
-                                                outline: 'none',
-                                                marginBottom: '20px',
-                                                display: 'block',
-                                                marginTop: '10px'
-                                            }}
-                                            type="text"
-                                            placeholder="Code"
-                                            onChange={handleChangeAdd}
-                                            name="code"
-                                            value={data.code}
-                                            required
-                                        />
-                                        <span>
-                                            <label>Status</label>
-                                        </span>
-                                        <input
-                                            style={{
-                                                width: '95%',
-                                                height: '30px',
-                                                borderRadius: '5px',
-                                                border: '1px solid #ccc',
-                                                padding: '10px',
-                                                fontSize: '16px',
-                                                outline: 'none',
-                                                marginBottom: '20px',
-                                                display: 'block',
-                                                marginTop: '10px'
-                                            }}
-                                            type="text"
-                                            placeholder="Status"
-                                            onChange={handleChangeAdd}
-                                            name="status"
-                                            value={data.status}
-                                            required
-                                        />
-                                        <span>
-                                            <label>Quantity</label>
-                                        </span>
-                                        <input
-                                            style={{
-                                                width: '95%',
-                                                height: '30px',
-                                                borderRadius: '5px',
-                                                border: '1px solid #ccc',
-                                                padding: '10px',
-                                                fontSize: '16px',
-                                                outline: 'none',
-                                                marginBottom: '20px',
-                                                display: 'block',
-                                                marginTop: '10px'
-                                            }}
-                                            type="text"
-                                            placeholder="Quantity"
-                                            onChange={handleChangeAdd}
-                                            name="quantity"
-                                            value={data.quantity}
-                                            required
-                                        />
-                                        <span>
-                                            <label>Price</label>
-                                        </span>
+                                        <div className="cs-group">
+                                            <input
+                                                style={{
+                                                    width: '25%',
+                                                    height: '30px',
+                                                    borderRadius: '5px',
+                                                    border: '1px solid #ccc',
+                                                    padding: '10px',
+                                                    fontSize: '16px',
+                                                    outline: 'none',
+                                                    marginBottom: '20px',
+                                                    display: 'inline',
+                                                    marginTop: '10px'
+                                                }}
+                                                type="text"
+                                                placeholder="Code"
+                                                onChange={handleChangeAdd}
+                                                name="code"
+                                                value={data.code}
+                                                required
+                                            />
+                                            <input
+                                                style={{
+                                                    width: '25%',
+                                                    height: '30px',
+                                                    borderRadius: '5px',
+                                                    border: '1px solid #ccc',
+                                                    padding: '10px',
+                                                    fontSize: '16px',
+                                                    outline: 'none',
+                                                    marginBottom: '20px',
+                                                    display: 'inline',
+                                                    marginTop: '10px',
+                                                    marginLeft: '25px'
+                                                }}
+                                                type="text"
+                                                placeholder="Status"
+                                                onChange={handleChangeAdd}
+                                                name="status"
+                                                value={data.status}
+                                                required
+                                            />
+                                            <input
+                                                style={{
+                                                    width: '27%',
+                                                    height: '30px',
+                                                    borderRadius: '5px',
+                                                    border: '1px solid #ccc',
+                                                    padding: '10px',
+                                                    fontSize: '16px',
+                                                    outline: 'none',
+                                                    marginBottom: '20px',
+                                                    display: 'inline',
+                                                    marginTop: '10px',
+                                                    marginLeft: '25px'
+                                                }}
+                                                type="text"
+                                                placeholder="Quantity"
+                                                onChange={handleChangeAdd}
+                                                name="quantity"
+                                                value={data.quantity}
+                                                required
+                                            />
+                                        </div>
                                         <input
                                             style={{
                                                 width: '95%',
@@ -435,32 +459,9 @@ function ProductsMng(show, onHide) {
                                             value={data.price}
                                             required
                                         />
-                                        <span>
-                                            <label>ImageName</label>
-                                        </span>
-                                        <input
-                                            style={{
-                                                width: '95%',
-                                                height: '30px',
-                                                borderRadius: '5px',
-                                                border: '1px solid #ccc',
-                                                padding: '10px',
-                                                fontSize: '16px',
-                                                outline: 'none',
-                                                marginBottom: '20px',
-                                                display: 'block',
-                                                marginTop: '10px'
-                                            }}
-                                            type="text"
-                                            placeholder="Image Name"
-                                            onChange={handleChangeAdd}
-                                            name="imgName"
-                                            value={data.imgName}
-                                            required
-                                        />
-                                        <span>
-                                            <label>Description</label>
-                                        </span>
+                                        <input type="file" onChange={handleChangeImage} />
+                                        <img src={file} style={{ width: "30%", height: "30%" }} />
+
                                         <input
                                             style={{
                                                 width: '95%',
@@ -486,37 +487,70 @@ function ProductsMng(show, onHide) {
                                                 <span>
                                                     <label>Supplier</label>
                                                 </span>
-                                                <select name="supplierId">
+                                                <select name="supplierId" style={{ padding: "10px", border: "0.2 solid #ccc", borderRadius: "5px", marginLeft: "18px", width: "82%", height: "40px" }}>
                                                     {Array.isArray(state.suppIdList) && state.suppIdList.map((item, index) => {
                                                         return (
-                                                            
-                                                            <option key={index} value={data.supplierId = item.Id}>{item.SupplierName}</option>
+
+                                                            <option
+                                                                key={index}
+                                                                value={data.supplierId = item.Id}
+                                                                style={{
+                                                                    padding: "0.75rem 1rem",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "revert",
+                                                                    color: "#4a4a4a",
+                                                                    backgroundColor: "#f7f7f7",
+                                                                    backgroundImage: "linear-gradient(to bottom, #f7f7f7, #f1f1f1)",
+                                                                    border: "none",
+                                                                    borderBottom: "2px solid #ddd",
+                                                                    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                                                                    transition: "all 0.2s ease-in-out"
+                                                                }}
+                                                            >
+                                                                {item.SupplierName}
+                                                            </option>
                                                         )
                                                     })}
                                                 </select>
                                             </div>
-                                            <div className="select-cateId">
-                                            <span>
-                                                <label>Category</label>
-                                            </span>
-                                            <select name="supplierId">
-                                                {Array.isArray(state.cateList) && state.cateList.map((item, index) => {
-                                                    return (
-                                                        <option key={index} value={data.categoryId = item.Id}>{item.CategoryName}</option>
-                                                    )
-                                                })}
-                                            </select>
+                                            <div className="select-cateId" style={{ paddingTop: "15px" }}>
+                                                <span>
+                                                    <label>Category</label>
+                                                </span>
+                                                <select name="supplierId" style={{ padding: "10px", border: "0.2 solid #ccc", borderRadius: "5px", marginLeft: "10px", width: "82.5%", height: "40px" }}>
+                                                    {Array.isArray(state.cateList) && state.cateList.map((item, index) => {
+                                                        return (
+                                                            <option
+                                                                key={index}
+                                                                value={data.categoryId = item.Id}
+                                                                style={{
+                                                                    padding: "0.75rem 1rem",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "revert",
+                                                                    color: "#4a4a4a",
+                                                                    backgroundColor: "#f7f7f7",
+                                                                    backgroundImage: "linear-gradient(to bottom, #f7f7f7, #f1f1f1)",
+                                                                    border: "none",
+                                                                    borderBottom: "2px solid #ddd",
+                                                                    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                                                                    transition: "all 0.2s ease-in-out"
+                                                                }}>
+                                                                {item.CategoryName}
+                                                            </option>
+                                                        )
+                                                    })}
+                                                </select>
                                             </div>
                                         </div>
                                         <button className='btn-add' style={{
                                             width: '10%',
                                             height: '30px',
                                             borderRadius: '5px',
-                                            border: '1px solid #ccc',
+                                            border: '0.5px solid #ccc',
                                             fontSize: '16px',
                                             outline: 'none',
-                                            margin: '0 auto',
-                                            backgroundColor: 'white'
+                                            backgroundColor: 'white',
+                                            marginTop: '15px'
                                         }}
 
                                             onClick={handleAdd}> Add
