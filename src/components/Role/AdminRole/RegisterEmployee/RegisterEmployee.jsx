@@ -108,7 +108,7 @@ function RegisterEmployee() {
                         <td>{request.Name}</td>
                         <td>{request.Email}</td>
                         <td>
-                          <button className='btn-action' onClick={() => handleDelete(request.Id)} style={{ display: "block" }}>Reject</button>
+                          <button className='btn-action' onClick={() => handleDelete(request.Id)} style={{ display: "block", marginBottom: "0.5em", backgroundColor:"red" }}>Reject</button>
                           <button className='btn-action' onClick={() => handleAccept(request.Id)}>Accept</button>
                         </td>
                       </tr>

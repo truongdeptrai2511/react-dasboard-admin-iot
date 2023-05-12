@@ -25,15 +25,15 @@
     color: #FFFFFF;
     font-size: 0.9rem;
     font-weight: 700;
-    border-radius: 8px;
+    border-radius: 20px;
     text-transform: uppercase;
-    border: 0.5px solid #067fc6;
-    background-color: #0170b0cc;
-    padding: 0.2em;
-}
-
+    border: none;
+    background-color: #015C92;
+    padding: 0.7em 1.5em;
+    transition: background-color 0.2s, color 0.2s;
+    }
 .btn-action:hover{
-    color: #015C92;
+    color: #000000;
     border: 1px solid #015C92;
     background-color: #F0F2F5;
 }
