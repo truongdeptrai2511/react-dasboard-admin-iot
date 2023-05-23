@@ -44,8 +44,8 @@ function App() {
         <SideBar isLogin={isLogin} />
         <div className="dashboard-body">
           <Routes>
-            <Route path="*" element={<div></div>} />
-            <Route exact path="/" element={<div></div>} />
+            <Route path="*" element={<Login/>} />
+            <Route exact path="/" element={<></>} />
             <Route exact path="/orders" element={<Orders />} />
             <Route exact path="/locations" element={<div></div>} />
             <Route exact path="/profile" element={<Profile />} />

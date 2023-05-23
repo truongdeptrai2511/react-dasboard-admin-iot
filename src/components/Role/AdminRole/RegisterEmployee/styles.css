@@ -162,3 +162,13 @@
     border: 1px solid #448df4;
     background-color: #F0F2F5;
 }
+@keyframes slideIn {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
