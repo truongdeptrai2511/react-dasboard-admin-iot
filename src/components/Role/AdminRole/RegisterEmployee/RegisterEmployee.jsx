@@ -15,7 +15,7 @@ function RegisterEmployee() {
   const handleGetListEmployeeRequests = async () => {
     try {
       const url = "https://localhost:7199/api/auth/get-list-employee-requests";
-      const { data: res } = await axios.get(url);
+      const { data: res } = await axios.get(url, {headers: {Authorization: localStorage.getItem("token")}});
       setEmployeeRequests(res);
 
       setOriginalEmployeeRequests(res);

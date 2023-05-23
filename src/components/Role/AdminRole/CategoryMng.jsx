@@ -68,7 +68,7 @@ function CategoryMng(show, onHide) {
             );
             store.dispatch({ type: 'SET_CATE_LIST', payload: searchResults });
         } else {
-            store.dispatch({ type: 'SET_CATE_LIST', payload: state.refreshDataCate });
+            refreshCateList();
         }
     };
 

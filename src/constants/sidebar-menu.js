@@ -2,7 +2,6 @@ import DashboardIcon from '../assets/icons/dashboard.svg';
 import ShippingIcon from '../assets/icons/shipping.svg';
 import ProductIcon from '../assets/icons/product.svg';
 import UserIcon from '../assets/icons/user.svg';
-import warehouseicon from '../assets/icons/warehouseicon.svg';
 
 function getSidebarMenu(role) {
     if (role === "admin") {
@@ -36,7 +35,13 @@ function getSidebarMenu(role) {
           icon: UserIcon,
           path: '/manageremployee',
           title: 'Manage Employee',
-        }        
+        },   
+        {
+          id: 6,
+          icon: UserIcon,
+          path: '/registeradmin',
+          title: 'Register Admin',
+        }
       ]
     }
     if (role === "customer") {
