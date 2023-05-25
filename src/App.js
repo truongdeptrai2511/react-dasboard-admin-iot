@@ -33,8 +33,6 @@ function App() {
     if (token) {
       setSidebarActive(true);
       setIsLogin(true);
-    } else {
-      setSidebarActive(false);
     }
   }, []);
 
@@ -57,7 +55,7 @@ function App() {
             <Route exact path="/manageremployee" element={<ManageEmployee />} />
             <Route exact path='/suppliers' element={<SuppliersMng />} />
             <Route exact path='/category' element={<CategoryMng />} />
-            <Route exact path="products" element={<ProductsMng />} />
+            <Route exact path="/products" element={<ProductsMng />} />
             <Route exact path='/registeradmin' element={<RegisterAdmin />} />
           </Routes>
         </div>

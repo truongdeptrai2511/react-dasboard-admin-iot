@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import SideBarItem from './sidebar-item';
@@ -7,41 +7,40 @@ import JwtTokenClaim from '../../utils/JwtTokenClaim';
 import './styles.css';
 import getSidebarMenu from '../../constants/sidebar-menu';
 
-function SideBar({ isLogin }) {
+function SideBar(isLogin) {
   const location = useLocation();
   const [active, setActive] = useState(1);
   const payload = JwtTokenClaim();
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    if (payload !== null) {
-      setMenu(getSidebarMenu(payload.role));
-    } else {
-      setMenu(getSidebarMenu(''));
-    }
-  }, [payload]);
-
-  useEffect(() => {
-    menu.forEach((element) => {
-      if (location.pathname === element.path) {
-        setActive(element.id);
+    const updateMenu = () => {
+      if (payload !== null) {
+        setMenu(getSidebarMenu(payload.role)); // Cập nhật menu
+      } else {
+        setMenu(getSidebarMenu('')); // Cập nhật menu
       }
-    });
-  }, [location.pathname, menu]);
+    };
+
+    updateMenu();
+  }, []);
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      console.log(localStorage.getItem('token'));
-    } else {
-    }
-  }, [isLogin]);
+    const updateActive = () => {
+      const newActive = menu.find((element) => location.pathname === element.path)?.id;
+      if (newActive && newActive !== active) {
+        setActive(newActive); // Cập nhật giá trị active
+      }
+    };
+    updateActive();
+  }, [location.pathname]);
 
   const formatName = (name) => {
     return decodeURIComponent(escape(name));
   };
 
   const navigate = (id) => {
-    setActive(id);
+    setActive(id); // Cập nhật giá trị active
   };
 
   return (
@@ -52,7 +51,7 @@ function SideBar({ isLogin }) {
             IoTStore
           </h1>
         </div>
-        {isLogin && (
+        {isLogin.isLogin ? (
           <div className="sidebar-user">
             <h4 style={{ textAlign: 'center' }}>
               <Link
@@ -69,7 +68,7 @@ function SideBar({ isLogin }) {
               </Link>
             </h4>
           </div>
-        )}
+        ) : null}
         <div className="sidebar-container">
           <div className="sidebar-items">
             {menu.map((item, index) => (
@@ -82,6 +81,7 @@ function SideBar({ isLogin }) {
       </div>
     </nav>
   );
+  
 }
 
 export default SideBar;

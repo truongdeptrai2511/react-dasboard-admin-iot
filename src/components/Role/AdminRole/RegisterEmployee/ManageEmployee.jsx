@@ -94,27 +94,44 @@ function ManageEmployee() {
             Authorization: localStorage.getItem('token'),
           },
         });
-        
-        // Update the employeeList state with the new data
-        const updatedEmployeeList = employeeList.map((item) => {
-          if (item.Id === employee.Id) {
-            return {
-              ...item,
-              ...employee,
-            };
-          }
-          return item;
-        });
-        setEmployeeList(updatedEmployeeList);
-        
+  
+        // Check if the update was successful
+        if (response.status === 200) {
+          // Update the employeeList state with the new data
+          setEmployeeList((prevList) =>
+            prevList.map((item) => {
+              if (item.Id === employee.Id) {
+                return {
+                  ...item,
+                  ...employee,
+                };
+              }
+              return item;
+            })
+          );
+  
+          alert('Employee updated successfully!');
+        } else {
+          throw new Error('Failed to update employee.');
+        }
+  
         // Reset the updatedFields state for the updated employee
-        setUpdatedFields((prevFields) => ({ ...prevFields, [employee.Id]: false }));
+        setUpdatedFields((prevFields) => ({
+          ...prevFields,
+          [employee.Id]: false,
+        }));
+  
+        setReload((prevReload) => !prevReload);
       }
     } catch (error) {
       setError(error.message);
     }
   };
   
+  
+  useEffect(() => {
+    handleGetListEmp();
+  }, [reload]);
 
   // Load employee list when component mounts
   useEffect(() => {
@@ -181,7 +198,7 @@ function ManageEmployee() {
                                             />
                                         </td>
                                         <td>
-                                            <button className="btn-save" onClick={() => handleSubmit(request.Id)}>Save</button>
+                                            <button className="btn-save" onClick={() => handleSubmit(request)}>Save</button>
                                             <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
                                         </td>
                                     </tr>

@@ -11,11 +11,11 @@ function RegisterEmployee() {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState([]);
   const [originalEmployeeRequests, setOriginalEmployeeRequests] = useState([]);
-
+  const [isAccept, setIsAccept] = useState(false);
   const handleGetListEmployeeRequests = async () => {
     try {
       const url = "https://localhost:7199/api/auth/get-list-employee-requests";
-      const { data: res } = await axios.get(url, {headers: {Authorization: localStorage.getItem("token")}});
+      const { data: res } = await axios.get(url, { headers: { Authorization: localStorage.getItem("token") } });
       setEmployeeRequests(res);
 
       setOriginalEmployeeRequests(res);
@@ -28,7 +28,13 @@ function RegisterEmployee() {
 
   async function handleDelete(id) {
     try {
-      await axios.post(`https://localhost:7199/api/auth/reject/employee/${id}`);
+      await axios.post(`https://localhost:7199/api/auth/reject/employee/${id}`, 
+      { 
+        headers: 
+        { 
+          Authorization: localStorage.getItem("token") 
+        } 
+      });
       setEmployeeRequests(employeeRequests.filter(request => request.Id !== id));
     } catch (error) {
       setError(error.message);
@@ -36,8 +42,14 @@ function RegisterEmployee() {
   }
   function handleAccept(id) {
     try {
-      axios.post(`https://localhost:7199/api/auth/register/employee?EmployeeRequestId=${id}`);
+      axios.post(`https://localhost:7199/api/auth/register/employee?EmployeeRequestId=${id}`, 
+      { headers: 
+        { 
+          Authorization: localStorage.getItem("token") 
+        } 
+      });
       console.log(id);
+      setIsAccept(true);
       setEmployeeRequests(employeeRequests.filter(request => request.Id !== id));
     }
     catch (error) {
@@ -108,7 +120,7 @@ function RegisterEmployee() {
                         <td>{request.Name}</td>
                         <td>{request.Email}</td>
                         <td>
-                          <button className='btn-action' onClick={() => handleDelete(request.Id)} style={{ display: "block", marginBottom: "0.5em", backgroundColor:"red" }}>Reject</button>
+                          <button className='btn-action' onClick={() => handleDelete(request.Id)} style={{ display: "block", marginBottom: "0.5em", backgroundColor: "red" }}>Reject</button>
                           <button className='btn-action' onClick={() => handleAccept(request.Id)}>Accept</button>
                         </td>
                       </tr>
