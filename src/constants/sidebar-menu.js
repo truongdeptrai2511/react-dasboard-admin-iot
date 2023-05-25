@@ -96,7 +96,7 @@ function getSidebarMenu(role) {
         }
       ]
     }
-    else{
+    if(role === ''){
         return [
             {
                 id: 1,

@@ -18,7 +18,7 @@ function ManageEmployee() {
   const payload = GetJwtTokenClaim();
 
   // Fetch the list of employees from the API
-  const handleGetListEmp = async () => {
+  const fetchEmployeeList = async () => {
     try {
       const url = 'https://localhost:7199/api/employee';
       const response = await axios.get(url, {
@@ -94,7 +94,7 @@ function ManageEmployee() {
             Authorization: localStorage.getItem('token'),
           },
         });
-  
+
         // Check if the update was successful
         if (response.status === 200) {
           // Update the employeeList state with the new data
@@ -109,34 +109,116 @@ function ManageEmployee() {
               return item;
             })
           );
-  
           alert('Employee updated successfully!');
         } else {
           throw new Error('Failed to update employee.');
         }
-  
+
         // Reset the updatedFields state for the updated employee
         setUpdatedFields((prevFields) => ({
           ...prevFields,
           [employee.Id]: false,
         }));
-  
         setReload((prevReload) => !prevReload);
       }
     } catch (error) {
       setError(error.message);
     }
   };
-  
-  
-  useEffect(() => {
-    handleGetListEmp();
-  }, [reload]);
 
   // Load employee list when component mounts
   useEffect(() => {
-    handleGetListEmp();
+    fetchEmployeeList();
   }, []);
+
+  const renderEmployeeList = () => {
+    if (employeeList.length === 0) {
+      return <div style={{ padding: " 1em 0 0 1em" }}>No employee found.</div>;
+    }
+
+    return (
+      <div className="employee-list">
+        <table>
+          <tbody>
+            <tr>
+              <th>Username</th>
+              <th>FullName</th>
+              <th>Email</th>
+              <th>CitizenIdentification</th>
+              <th>Action</th>
+            </tr>
+            {Array.isArray(employeeList) && employeeList.map(request => (
+              <tr key={request.Id}>
+                <td style={{ maxWidth: "50px" }}>
+                  <input
+                    style={{ width: "100px" }}
+                    className="input-info"
+                    type="text"
+                    value={request.UserName}
+                    onChange={(event) => handleInputChange(request.Id, "UserName", event.target.value)}
+                  />
+                </td>
+                <td>
+                  <input
+                    className="input-info"
+                    type="text"
+                    value={request.FullName}
+                    onChange={(event) => handleInputChange(request.Id, "FullName", event.target.value)}
+                  />
+                </td>
+                <td>
+                  <input
+                    disabled
+                    className="input-info"
+                    type="text"
+                    value={request.Email}
+                    onChange={(event) => handleInputChange(request.Id, "Email", event.target.value)}
+                  />
+                </td>
+                <td>
+                  <input
+                    className="input-info"
+                    type="text"
+                    value={request.CitizenIdentification}
+                    onChange={(event) => handleInputChange(request.Id, "CitizenIdentification", event.target.value)}
+                  />
+                </td>
+                <td>
+                  <button className="btn-save" onClick={() => handleSubmit(request)}>Save</button>
+                  <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  const renderPagination = () => {
+    if (employeeList.length === 0) {
+      return (
+        <div className='dashboard-content-footer'>
+          <span className='empty-table'>No data</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className='dashboard-content-footer'>
+        {pagination.map((item, index) => (
+          <span
+            key={index}
+            className={item === page ? 'active-pagination' : 'pagination'}
+            onClick={() => handleChangePage(item)}
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="manage-employee-container">
       <div className='manage-employee-header'>
@@ -149,85 +231,10 @@ function ManageEmployee() {
           onChange={handleSearch}
         />
       </div>
-      {employeeList.length > 0 ?
-        <div className="employee-list">
-          <table>
-            <tbody>
-              <tr>
-                <th>Username</th>
-                <th>FullName</th>
-                <th>Email</th>
-                <th>CitizenIdentification</th>
-                <th>Action</th>
-              </tr>
-              {
-                                Array.isArray(employeeList) && employeeList.map(request => (
-                                    <tr key={request.Id}>
-                                        <td style={{ maxWidth: "50px" }}>
-                                            <input
-                                                style={{width: "100px"}}
-                                                className="input-info"
-                                                type="text"
-                                                value={request.UserName}
-                                                onChange={(event) => handleInputChange(request.Id, "UserName", event.target.value)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                className="input-info"
-                                                type="text"
-                                                value={request.FullName}
-                                                onChange={(event) => handleInputChange(request.Id, "FullName", event.target.value)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                disabled
-                                                className="input-info"
-                                                type="text"
-                                                value={request.Email}
-                                                onChange={(event) => handleInputChange(request.Id, "Email", event.target.value)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                className="input-info"
-                                                type="text"
-                                                value={request.CitizenIdentification}
-                                                onChange={(event) => handleInputChange(request.Id, "CitizenIdentification", event.target.value)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <button className="btn-save" onClick={() => handleSubmit(request)}>Save</button>
-                                            <button className='btn-del' onClick={() => handleDelete(request.Id)}>x</button>
-                                        </td>
-                                    </tr>
-                                ))}
-
-            </tbody>
-          </table>
-        </div> : (
-          <div style={{ padding: " 1em 0 0 1em" }}>No employee found.</div>
-        )
-      }
-      {employeeList.length !== 0 ?
-        <div className='dashboard-content-footer'>
-          {pagination.map((item, index) => (
-            <span
-              key={index}
-              className={item === page ? 'active-pagination' : 'pagination'}
-              onClick={() => handleChangePage(item)}>
-              {item}
-            </span>
-          ))}
-        </div>
-        :
-        <div className='dashboard-content-footer'>
-          <span className='empty-table'>No data</span>
-        </div>
-      }
+      {renderEmployeeList()}
+      {renderPagination()}
     </div>
-  )
+  );
 }
 
-export default ManageEmployee
+export default ManageEmployee;

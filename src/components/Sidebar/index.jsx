@@ -23,7 +23,7 @@ function SideBar(isLogin) {
     };
 
     updateMenu();
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     const updateActive = () => {
@@ -68,7 +68,7 @@ function SideBar(isLogin) {
               </Link>
             </h4>
           </div>
-        ) : null}
+        ) : ''}
         <div className="sidebar-container">
           <div className="sidebar-items">
             {menu.map((item, index) => (
