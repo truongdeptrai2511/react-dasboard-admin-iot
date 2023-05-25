@@ -17,7 +17,6 @@ function RegisterEmployee() {
       const url = "https://localhost:7199/api/auth/get-list-employee-requests";
       const { data: res } = await axios.get(url, { headers: { Authorization: localStorage.getItem("token") } });
       setEmployeeRequests(res);
-
       setOriginalEmployeeRequests(res);
       setPagination(calculateRange(res, 5));
       setEmployeeRequests(sliceData(res, page, 5));

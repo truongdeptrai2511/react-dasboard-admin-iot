@@ -39,7 +39,7 @@ function Profile () {
                     </li>
                     <li className="list_group_item">
                         <span>Password: </span>
-                        <a onClick={handleShowChange} style={{textDecoration:"none", paddingLeft:"10px", color:"#4da6ff", paddingBottom:"10px"}}>Click to change password</a>
+                        <a onClick={handleShowChange} style={{textDecoration:"none", paddingLeft:"10px", color:"#4da6ff", paddingBottom:"10px", cursor:"pointer"}}>Click to change password</a>
                         {showChangePassword && <ResetPassword />}
                     </li>
                 </ul>

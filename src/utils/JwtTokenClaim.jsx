@@ -9,6 +9,7 @@ function GetJwtTokenClaim() {
     {
       setfullName(localStorage.getItem('fullName'));
       const decodedFullName = decodeURIComponent(escape(fullName));
+      
       return setfullName(decodedFullName);
     }
   },[])
