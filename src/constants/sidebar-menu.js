@@ -39,6 +39,12 @@ function getSidebarMenu(role) {
         {
           id: 6,
           icon: UserIcon,
+          path: '/suppliers',
+          title: 'Manage Suppliers',
+        }, 
+        {
+          id: 7,
+          icon: UserIcon,
           path: '/registeradmin',
           title: 'Register Admin',
         }
